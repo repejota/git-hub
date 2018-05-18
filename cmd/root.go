@@ -26,9 +26,9 @@ import (
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
-	Use:   "git hub",
+	Use:   "git-hub",
 	Short: "Automate git and github",
-	Long:  `git hub automates git and github flow of work`,
+	Long:  `git-hub automates git and github flow of work`,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Usage()
 		os.Exit(0)

@@ -15,23 +15,22 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 
-package main
+package cmd
 
 import (
-	hub "github.com/repejota/git-hub"
-	"github.com/repejota/git-hub/cmd"
+	"fmt"
+	"os"
+
+	"github.com/spf13/cobra"
 )
 
-var (
-	// Version is the current version number
-	Version string
-	// Build is the current build id
-	Build string
-)
-
-func main() {
-	cmd.RootCmd.SetVersionTemplate(`{{with .Name}}{{printf "%s " .}}{{end}}{{printf "%s" .Version}}`)
-	cmd.RootCmd.Version = hub.ShowVersionInfo(Version, Build)
-	cmd.RootCmd.AddCommand(cmd.InfoCmd)
-	cmd.Execute()
+// InfoCmd represents the info command
+var InfoCmd = &cobra.Command{
+	Use:   "info",
+	Short: "Get information about the repository",
+	Long:  `Get information about the repository and its github project`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("info command")
+		os.Exit(0)
+	},
 }
