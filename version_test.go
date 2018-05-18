@@ -19,14 +19,14 @@ package hub_test
 import (
 	"testing"
 
-	"github.com/issues2markdown/cli"
+	hub "github.com/repejota/git-hub"
 )
 
 func TestShowVersionInfo(t *testing.T) {
 	expectedOutput := "version 1.2.3 build 91b49a2\n"
 	version := "1.2.3"
 	build := "91b49a2"
-	output := cli.ShowVersionInfo(version, build)
+	output := hub.ShowVersionInfo(version, build)
 	if output != expectedOutput {
 		t.Fatalf("Expected output was %q but got %q", expectedOutput, output)
 	}
