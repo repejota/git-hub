@@ -6,8 +6,8 @@ Opinionated git and github automation tool.
 
 [![License][License-Image]][License-Url]
 [![CircleCI](https://circleci.com/gh/repejota/git-hub.svg?style=svg)](https://circleci.com/gh/repejota/git-hub)
-[![Coverage Status](https://coveralls.io/repos/github/repejota/issues2markdown/badge.svg?branch=master)]
-[![Go Report Card](https://goreportcard.com/badge/github.com/repejota/issues2markdown)]
+[Coverage Status](https://coveralls.io/repos/github/repejota/issues2markdown/badge.svg?branch=master)
+[Go Report Card](https://goreportcard.com/badge/github.com/repejota/issues2markdown)
 
 ## License
 
