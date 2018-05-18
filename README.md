@@ -4,11 +4,10 @@ Opinionated git and github automation tool.
 
 ## Badges
 
-* License [![License][License-Image]][License-Url]
-* [![CircleCI](https://circleci.com/gh/repejota/issues2markdown/tree/master.svg?style=svg)](https://circleci.com/gh/repejota/issues2markdown/tree/master)
-* [![Coverage Status](https://coveralls.io/repos/github/repejota/issues2markdown/badge.svg?branch=master)]
-* Test Coverage Develop [![Coverage Status](https://coveralls.io/repos/github/repejota/issues2markdown/badge.svg?branch=develop)](https://coveralls.io/github/repejota/issues2markdown?branch=develop)
-* Golang ReportCard [![Go Report Card](https://goreportcard.com/badge/github.com/repejota/issues2markdown)](https://goreportcard.com/report/github.com/repejota/issues2markdown)
+[![License][License-Image]][License-Url]
+[![CircleCI](https://circleci.com/gh/repejota/issues2markdown/tree/master.svg?style=svg)](https://circleci.com/gh/repejota/issues2markdown/tree/master) 
+[![Coverage Status](https://coveralls.io/repos/github/repejota/issues2markdown/badge.svg?branch=master)] 
+[![Go Report Card](https://goreportcard.com/badge/github.com/repejota/issues2markdown)]
 
 ## License
 
