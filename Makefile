@@ -1,6 +1,6 @@
 include Makefile.help.mk
 
-BINARY=issues2markdown
+BINARY=git-hub
 MAIN_PACKAGE=cmd/${BINARY}/main.go
 PACKAGES = $(shell go list ./...)
 VERSION=`cat VERSION`
