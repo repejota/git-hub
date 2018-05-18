@@ -15,22 +15,4 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 
-package main
-
-import (
-	hub "github.com/repejota/git-hub"
-	"github.com/repejota/git-hub/cmd"
-)
-
-var (
-	// Version is the current version number
-	Version string
-	// Build is the current build id
-	Build string
-)
-
-func main() {
-	cmd.RootCmd.SetVersionTemplate(`{{with .Name}}{{printf "%s " .}}{{end}}{{printf "%s" .Version}}`)
-	cmd.RootCmd.Version = hub.ShowVersionInfo(Version, Build)
-	cmd.Execute()
-}
+package hub

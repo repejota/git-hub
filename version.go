@@ -15,22 +15,13 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 
-package main
+package hub
 
-import (
-	hub "github.com/repejota/git-hub"
-	"github.com/repejota/git-hub/cmd"
-)
+import "fmt"
 
-var (
-	// Version is the current version number
-	Version string
-	// Build is the current build id
-	Build string
-)
-
-func main() {
-	cmd.RootCmd.SetVersionTemplate(`{{with .Name}}{{printf "%s " .}}{{end}}{{printf "%s" .Version}}`)
-	cmd.RootCmd.Version = hub.ShowVersionInfo(Version, Build)
-	cmd.Execute()
+// ShowVersionInfo returns version and build information
+func ShowVersionInfo(version, build string) string {
+	tpl := "version %s build %s\n"
+	output := fmt.Sprintf(tpl, version, build)
+	return output
 }

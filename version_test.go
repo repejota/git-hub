@@ -14,23 +14,20 @@
 // WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
 // License for the specific language governing permissions and limitations
 // under the License.
-
-package main
+package hub_test
 
 import (
+	"testing"
+
 	hub "github.com/repejota/git-hub"
-	"github.com/repejota/git-hub/cmd"
 )
 
-var (
-	// Version is the current version number
-	Version string
-	// Build is the current build id
-	Build string
-)
-
-func main() {
-	cmd.RootCmd.SetVersionTemplate(`{{with .Name}}{{printf "%s " .}}{{end}}{{printf "%s" .Version}}`)
-	cmd.RootCmd.Version = hub.ShowVersionInfo(Version, Build)
-	cmd.Execute()
+func TestShowVersionInfo(t *testing.T) {
+	expectedOutput := "version 1.2.3 build 91b49a2\n"
+	version := "1.2.3"
+	build := "91b49a2"
+	output := hub.ShowVersionInfo(version, build)
+	if output != expectedOutput {
+		t.Fatalf("Expected output was %q but got %q", expectedOutput, output)
+	}
 }
