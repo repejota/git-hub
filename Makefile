@@ -45,6 +45,10 @@ cover-html: cover-profile
 cover-html:		## Generate coverage report
 	go tool cover -html=coverage-all.out
 
+.PHONY: coveralls
+coveralls:
+	goveralls -service circle-ci -repotoken gfj9LMpotQO80re02H4N1hhw7z3ovS84s
+
 # Lint
 
 lint:			## Lint source code
