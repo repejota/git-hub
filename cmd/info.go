@@ -39,19 +39,17 @@ var InfoCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
-
 		// Get remotes
 		gitRemoteList, err := gitRepository.Remotes()
 		if err != nil {
 			log.Fatal(err)
 		}
 		gitRemoteURL := gitRemoteList[0].Config().URLs[0]
-
+		// Get org and repo name
 		hubOrganizationName, hubRepositoryName, err := parseRemoteURL(gitRemoteURL)
 		if err != nil {
 			log.Fatal(err)
 		}
-
 		// Get repository info from Github API
 		ctx := context.Background()
 		client := github.NewClient(nil)
@@ -59,7 +57,6 @@ var InfoCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
-
 		// Print info
 		fmt.Printf("GitHub Repository ID: %d\n", hubRepository.ID)
 		fmt.Printf("Github Respository Full Name: %s\n", *hubRepository.FullName)
