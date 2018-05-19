@@ -24,6 +24,7 @@ import (
 	"os"
 
 	"github.com/google/go-github/github"
+	"github.com/repejota/git-hub"
 	"github.com/spf13/cobra"
 	git "gopkg.in/src-d/go-git.v4"
 )
@@ -57,7 +58,7 @@ var IssueListCmd = &cobra.Command{
 		}
 		gitRemoteURL := gitRemoteList[0].Config().URLs[0]
 		// Get org and repo name
-		hubOrganizationName, hubRepositoryName, err := parseRemoteURL(gitRemoteURL)
+		_, hubOrganizationName, hubRepositoryName, err := ghub.ParseGithubURL(gitRemoteURL)
 		if err != nil {
 			log.Fatal(err)
 		}

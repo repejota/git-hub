@@ -15,13 +15,4 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 
-package ghub
-
-import "fmt"
-
-// ShowVersionInfo returns version and build information
-func ShowVersionInfo(version, build string) string {
-	tpl := "version %s build %s\n"
-	output := fmt.Sprintf(tpl, version, build)
-	return output
-}
+package ghub_test
