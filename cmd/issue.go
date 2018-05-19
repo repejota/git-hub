@@ -18,15 +18,12 @@
 package cmd
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"os"
 
-	"github.com/google/go-github/github"
 	"github.com/repejota/git-hub"
 	"github.com/spf13/cobra"
-	git "gopkg.in/src-d/go-git.v4"
 )
 
 // IssueCmd represents the issue command
@@ -46,31 +43,24 @@ var IssueListCmd = &cobra.Command{
 	Short: "List issues",
 	Long:  `List repository issues`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// Open repository
-		gitRepository, err := git.PlainOpen(".")
-		if err != nil {
-			log.Fatal(err)
-		}
-		// Get remotes
-		gitRemoteList, err := gitRepository.Remotes()
-		if err != nil {
-			log.Fatal(err)
-		}
-		gitRemoteURL := gitRemoteList[0].Config().URLs[0]
-		// Get org and repo name
-		_, hubOrganizationName, hubRepositoryName, err := ghub.ParseGithubURL(gitRemoteURL)
-		if err != nil {
-			log.Fatal(err)
-		}
-		// Get repository issues from Github API
-		ctx := context.Background()
-		client := github.NewClient(nil)
-		options := &github.IssueListByRepoOptions{}
-		issues, _, err := client.Issues.ListByRepo(ctx, hubOrganizationName, hubRepositoryName, options)
+		repositoryPath := "."
+
+		repository := &ghub.Repository{}
+
+		err := repository.Git(repositoryPath)
 		if err != nil {
 			log.Fatal(err)
 		}
 
+		err = repository.GetRemoteGithubRepository("origin")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		issues, err := ghub.ListIssuesByRepo(*repository.GitHubRepository.FullName)
+		if err != nil {
+			log.Fatal(err)
+		}
 		for _, issue := range issues {
 			fmt.Printf("#%d - %s - %s\n", *issue.Number, *issue.Title, *issue.HTMLURL)
 		}

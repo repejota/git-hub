@@ -75,8 +75,14 @@ func ParseGithubURL(url string) (string, string, string, error) {
 	parts := strings.Split(url, ":")
 	host := strings.Split(parts[0], "@")[1]
 	fullName := strings.Split(parts[1], ".")[0]
-	parts = strings.Split(fullName, "/")
+	organization, repository := ParseFullName(fullName)
+	return host, organization, repository, nil
+}
+
+// ParseFullName ...
+func ParseFullName(fullName string) (string, string) {
+	parts := strings.Split(fullName, "/")
 	organization := parts[0]
 	repository := parts[1]
-	return host, organization, repository, nil
+	return organization, repository
 }
