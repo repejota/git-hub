@@ -32,5 +32,6 @@ var (
 func main() {
 	cmd.RootCmd.SetVersionTemplate(`{{with .Name}}{{printf "%s " .}}{{end}}{{printf "%s" .Version}}`)
 	cmd.RootCmd.Version = hub.ShowVersionInfo(Version, Build)
+	cmd.RootCmd.AddCommand(cmd.InfoCmd)
 	cmd.Execute()
 }
