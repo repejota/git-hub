@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 
 	"github.com/repejota/git-hub"
 	"github.com/spf13/cobra"
@@ -73,7 +74,36 @@ var IssueStartCmd = &cobra.Command{
 	Short: "Start an issue",
 	Long:  `Start working on an issue`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("git hub list start")
+
+		if len(args) == 0 {
+			log.Fatalf("An issue ID is required")
+		}
+		issueID, err := strconv.Atoi(args[0])
+		if err != nil {
+			log.Fatalf("Invalid issue ID")
+		}
+		log.Printf("Start working on the issue: %d\n", issueID)
+
+		repositoryPath := "."
+
+		repository := &ghub.Repository{}
+
+		err = repository.Git(repositoryPath)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		err = repository.GetRemoteGithubRepository("origin")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		issue, err := ghub.GetIssue(*repository.GitHubRepository.FullName, issueID)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Println(issue)
 	},
 }
 
