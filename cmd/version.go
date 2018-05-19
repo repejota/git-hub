@@ -29,6 +29,6 @@ var VersionCmd = &cobra.Command{
 	Short: "Show version information",
 	Long:  `Show application version information`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("fooo")
+		fmt.Printf("%s %s", "git-hub", RootCmd.Version)
 	},
 }
