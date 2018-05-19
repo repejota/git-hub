@@ -60,7 +60,7 @@ deps:			## Install package dependencies
 	go get -u github.com/spf13/cobra/cobra
 	go get -u golang.org/x/oauth2
 	go get -u gopkg.in/src-d/go-git.v4/...
-	go get -u github.com/google/go-github
+	go get -u github.com/google/go-github/github
 	
 dev-deps:		## Install dev dependencies
 	go get -u github.com/mattn/goveralls
