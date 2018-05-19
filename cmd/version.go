@@ -15,37 +15,20 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 
-package main
+package cmd
 
 import (
-	ghub "github.com/repejota/git-hub"
-	"github.com/repejota/git-hub/cmd"
+	"fmt"
+
+	"github.com/spf13/cobra"
 )
 
-var (
-	// Version is the current version number
-	Version string
-	// Build is the current build id
-	Build string
-)
-
-func main() {
-	cmd.RootCmd.SetVersionTemplate(`{{with .Name}}{{printf "%s " .}}{{end}}{{printf "%s" .Version}}`)
-	cmd.RootCmd.Version = ghub.ShowVersionInfo(Version, Build)
-
-	cmd.RootCmd.AddCommand(cmd.InfoCmd)
-
-	cmd.IssueCmd.AddCommand(cmd.IssueListCmd)
-	cmd.IssueCmd.AddCommand(cmd.IssueStartCmd)
-	cmd.IssueCmd.AddCommand(cmd.IssueFinishCmd)
-	cmd.RootCmd.AddCommand(cmd.IssueCmd)
-
-	cmd.ReleaseCmd.AddCommand(cmd.ReleaseListCmd)
-	cmd.ReleaseCmd.AddCommand(cmd.ReleaseStartCmd)
-	cmd.ReleaseCmd.AddCommand(cmd.ReleaseFinishCmd)
-	cmd.RootCmd.AddCommand(cmd.ReleaseCmd)
-
-	cmd.RootCmd.AddCommand(cmd.VersionCmd)
-
-	cmd.Execute()
+// VersionCmd represents the version command
+var VersionCmd = &cobra.Command{
+	Use:   "version",
+	Short: "Show version information",
+	Long:  `Show application version information`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Printf("%s %s", "git-hub", RootCmd.Version)
+	},
 }
