@@ -35,3 +35,15 @@ func ListIssuesByRepo(repoFullName string) ([]*github.Issue, error) {
 	}
 	return issues, nil
 }
+
+// GetIssue ...
+func GetIssue(repoFullName string, issueID int) (*github.Issue, error) {
+	organization, repository := ParseFullName(repoFullName)
+	ctx := context.Background()
+	client := github.NewClient(nil)
+	issue, _, err := client.Issues.Get(ctx, organization, repository, issueID)
+	if err != nil {
+		return nil, err
+	}
+	return issue, nil
+}
