@@ -69,19 +69,6 @@ func (r *Repository) GetRemoteGithubRepository(remoteName string) error {
 	return nil
 }
 
-// ListIssues ...
-func (r *Repository) ListIssues() ([]*github.Issue, error) {
-	organization, repository := ParseFullName(*r.GitHubRepository.FullName)
-	ctx := context.Background()
-	client := github.NewClient(nil)
-	options := &github.IssueListByRepoOptions{}
-	issues, _, err := client.Issues.ListByRepo(ctx, organization, repository, options)
-	if err != nil {
-		return nil, err
-	}
-	return issues, nil
-}
-
 // ParseGithubURL ...
 func ParseGithubURL(url string) (string, string, string, error) {
 	// git@github.com:repejota/git-hub.git

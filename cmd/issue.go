@@ -57,7 +57,7 @@ var IssueListCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		issues, err := repository.ListIssues()
+		issues, err := ghub.ListIssuesByRepo(*repository.GitHubRepository.FullName)
 		if err != nil {
 			log.Fatal(err)
 		}
