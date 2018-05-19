@@ -18,10 +18,14 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
+	"log"
 	"os"
 
+	"github.com/google/go-github/github"
 	"github.com/spf13/cobra"
+	git "gopkg.in/src-d/go-git.v4"
 )
 
 // IssueCmd represents the issue command
@@ -41,7 +45,34 @@ var IssueListCmd = &cobra.Command{
 	Short: "List issues",
 	Long:  `List repository issues`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("git hub list issue")
+		// Open repository
+		gitRepository, err := git.PlainOpen(".")
+		if err != nil {
+			log.Fatal(err)
+		}
+		// Get remotes
+		gitRemoteList, err := gitRepository.Remotes()
+		if err != nil {
+			log.Fatal(err)
+		}
+		gitRemoteURL := gitRemoteList[0].Config().URLs[0]
+		// Get org and repo name
+		hubOrganizationName, hubRepositoryName, err := parseRemoteURL(gitRemoteURL)
+		if err != nil {
+			log.Fatal(err)
+		}
+		// Get repository issues from Github API
+		ctx := context.Background()
+		client := github.NewClient(nil)
+		options := &github.IssueListByRepoOptions{}
+		issues, _, err := client.Issues.ListByRepo(ctx, hubOrganizationName, hubRepositoryName, options)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		for _, issue := range issues {
+			fmt.Printf("#%d - %s - %s\n", *issue.Number, *issue.Title, *issue.HTMLURL)
+		}
 	},
 }
 
