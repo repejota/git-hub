@@ -22,9 +22,11 @@ import (
 	"errors"
 	"io/ioutil"
 	"log"
+	"os"
 	"strings"
 
 	"github.com/google/go-github/github"
+	"golang.org/x/oauth2"
 	git "gopkg.in/src-d/go-git.v4"
 )
 
@@ -74,7 +76,14 @@ func (r *Repository) GetRemoteGithubRepository(remoteName string) error {
 	}
 	// Get repository info from Github API
 	ctx := context.Background()
-	client := github.NewClient(nil)
+	githubToken := os.Getenv("GITHUB_TOKEN")
+	ts := oauth2.StaticTokenSource(
+		&oauth2.Token{
+			AccessToken: githubToken,
+		},
+	)
+	tc := oauth2.NewClient(ctx, ts)
+	client := github.NewClient(tc)
 	githubRepository, _, err := client.Repositories.Get(ctx, organization, repository)
 	if err != nil {
 		log.Fatal(err)

@@ -19,15 +19,24 @@ package ghub
 
 import (
 	"context"
+	"os"
 
 	"github.com/google/go-github/github"
+	"golang.org/x/oauth2"
 )
 
 // ListIssuesByRepo ...
 func ListIssuesByRepo(repoFullName string) ([]*github.Issue, error) {
 	organization, repository := ParseRepositoryFullName(repoFullName)
 	ctx := context.Background()
-	client := github.NewClient(nil)
+	githubToken := os.Getenv("GITHUB_TOKEN")
+	ts := oauth2.StaticTokenSource(
+		&oauth2.Token{
+			AccessToken: githubToken,
+		},
+	)
+	tc := oauth2.NewClient(ctx, ts)
+	client := github.NewClient(tc)
 	options := &github.IssueListByRepoOptions{}
 	issues, _, err := client.Issues.ListByRepo(ctx, organization, repository, options)
 	if err != nil {
@@ -40,7 +49,14 @@ func ListIssuesByRepo(repoFullName string) ([]*github.Issue, error) {
 func GetIssue(repoFullName string, issueID int) (*github.Issue, error) {
 	organization, repository := ParseFullName(repoFullName)
 	ctx := context.Background()
-	client := github.NewClient(nil)
+	githubToken := os.Getenv("GITHUB_TOKEN")
+	ts := oauth2.StaticTokenSource(
+		&oauth2.Token{
+			AccessToken: githubToken,
+		},
+	)
+	tc := oauth2.NewClient(ctx, ts)
+	client := github.NewClient(tc)
 	issue, _, err := client.Issues.Get(ctx, organization, repository, issueID)
 	if err != nil {
 		return nil, err
