@@ -63,3 +63,23 @@ func GetIssue(repoFullName string, issueID int) (*github.Issue, error) {
 	}
 	return issue, nil
 }
+
+// AssignUserToIssue ...
+func AssignUserToIssue(repoFullName string, user *github.User, issue *github.Issue) error {
+	organization, repository := ParseFullName(repoFullName)
+	ctx := context.Background()
+	githubToken := os.Getenv("GITHUB_TOKEN")
+	ts := oauth2.StaticTokenSource(
+		&oauth2.Token{
+			AccessToken: githubToken,
+		},
+	)
+	tc := oauth2.NewClient(ctx, ts)
+	client := github.NewClient(tc)
+	users := []string{*user.Login}
+	issue, _, err := client.Issues.AddAssignees(ctx, organization, repository, *issue.Number, users)
+	if err != nil {
+		return err
+	}
+	return nil
+}
