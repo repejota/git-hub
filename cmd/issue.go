@@ -98,12 +98,20 @@ var IssueStartCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
+		user, err := ghub.GetAuthenticatedUser()
+		if err != nil {
+			log.Fatal(err)
+		}
+
 		issue, err := ghub.GetIssue(*repository.GitHubRepository.FullName, issueID)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		fmt.Println(issue)
+		err = ghub.AssignUserToIssue(*repository.GitHubRepository.FullName, user, issue)
+		if err != nil {
+			log.Fatal(err)
+		}
 	},
 }
 
