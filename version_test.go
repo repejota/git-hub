@@ -14,19 +14,19 @@
 // WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
 // License for the specific language governing permissions and limitations
 // under the License.
-package github_test
+package ghub_test
 
 import (
 	"testing"
 
-	hub "github.com/repejota/git-hub"
+	"github.com/repejota/git-hub"
 )
 
 func TestShowVersionInfo(t *testing.T) {
 	expectedOutput := "version 1.2.3 build 91b49a2\n"
 	version := "1.2.3"
 	build := "91b49a2"
-	output := hub.ShowVersionInfo(version, build)
+	output := ghub.ShowVersionInfo(version, build)
 	if output != expectedOutput {
 		t.Fatalf("Expected output was %q but got %q", expectedOutput, output)
 	}
