@@ -18,10 +18,14 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
-	"os"
+	"log"
+	"strings"
 
+	"github.com/google/go-github/github"
 	"github.com/spf13/cobra"
+	git "gopkg.in/src-d/go-git.v4"
 )
 
 // InfoCmd represents the info command
@@ -30,7 +34,44 @@ var InfoCmd = &cobra.Command{
 	Short: "Get information about the repository",
 	Long:  `Get information about the repository and its github project`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("info command")
-		os.Exit(0)
+		// Open repository
+		gitRepository, err := git.PlainOpen(".")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// Get remotes
+		gitRemoteList, err := gitRepository.Remotes()
+		if err != nil {
+			log.Fatal(err)
+		}
+		gitRemoteURL := gitRemoteList[0].Config().URLs[0]
+
+		hubOrganizationName, hubRepositoryName, err := parseRemoteURL(gitRemoteURL)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// Get repository info from Github API
+		ctx := context.Background()
+		client := github.NewClient(nil)
+		hubRepository, _, err := client.Repositories.Get(ctx, hubOrganizationName, hubRepositoryName)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// Print info
+		fmt.Printf("GitHub Repository ID: %d\n", hubRepository.ID)
+		fmt.Printf("Github Respository Full Name: %s\n", *hubRepository.FullName)
+		fmt.Printf("Github Respository URL: %s\n", *hubRepository.HTMLURL)
 	},
+}
+
+func parseRemoteURL(url string) (string, string, error) {
+	parts := strings.Split(url, ":")
+	parts = strings.Split(parts[1], ".")
+	parts = strings.Split(parts[0], "/")
+	organization := parts[0]
+	repository := parts[1]
+	return organization, repository, nil
 }
