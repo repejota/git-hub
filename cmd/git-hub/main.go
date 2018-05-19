@@ -40,5 +40,10 @@ func main() {
 	cmd.IssueCmd.AddCommand(cmd.IssueFinishCmd)
 	cmd.RootCmd.AddCommand(cmd.IssueCmd)
 
+	cmd.ReleaseCmd.AddCommand(cmd.ReleaseListCmd)
+	cmd.ReleaseCmd.AddCommand(cmd.ReleaseStartCmd)
+	cmd.ReleaseCmd.AddCommand(cmd.ReleaseFinishCmd)
+	cmd.RootCmd.AddCommand(cmd.ReleaseCmd)
+
 	cmd.Execute()
 }

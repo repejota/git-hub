@@ -92,6 +92,6 @@ var IssueFinishCmd = &cobra.Command{
 	Short: "Finish an issue",
 	Long:  `Finish working on an issue`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("git hub list finish")
+		fmt.Println("git hub issue finish")
 	},
 }
