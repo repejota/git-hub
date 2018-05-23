@@ -43,11 +43,8 @@ var IssueListCmd = &cobra.Command{
 	Short: "List issues",
 	Long:  `List repository issues`,
 	Run: func(cmd *cobra.Command, args []string) {
-		repositoryPath := "."
-
-		repository := &ghub.Repository{}
-
-		err := repository.Git(repositoryPath)
+		// Open repository
+		repository, err := ghub.OpenRepository(".")
 		if err != nil {
 			log.Fatal(err)
 		}

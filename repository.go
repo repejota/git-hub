@@ -33,6 +33,16 @@ type Repository struct {
 	GitHubRepository *github.Repository
 }
 
+// OpenRepository opens a repository from a path
+func OpenRepository(path string) (*Repository, error) {
+	repository := &Repository{}
+	err := repository.Git(path)
+	if err != nil {
+		return nil, err
+	}
+	return repository, nil
+}
+
 // Git ...
 func (r *Repository) Git(path string) error {
 	gitRepository, err := git.PlainOpen(path)

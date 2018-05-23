@@ -19,8 +19,10 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"os"
 
+	"github.com/repejota/git-hub"
 	"github.com/spf13/cobra"
 )
 
@@ -51,7 +53,18 @@ var ReleaseStartCmd = &cobra.Command{
 	Short: "Start a release",
 	Long:  `Start working on an release`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("git hub release start")
+		// Open repository
+		repository, err := ghub.OpenRepository(".")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// Get the current branch
+		ref, err := repository.GitRepository.Head()
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(ref)
 	},
 }
 
