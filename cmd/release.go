@@ -54,17 +54,32 @@ var ReleaseStartCmd = &cobra.Command{
 	Short: "Start a release",
 	Long:  `Start working on an release`,
 	Run: func(cmd *cobra.Command, args []string) {
+		path := "."
+
 		// Open repository
-		repository, err := ghub.OpenRepository(".")
+		repository, err := ghub.OpenRepository(path)
 		if err != nil {
 			log.Fatal(err)
 		}
+		log.Printf("Open repository at %q successfully\n", path)
 
-		branch, err := shell.GetCurrentBranch(repository)
-		if err != err {
+		// Get the current branch
+		currentBranch, err := shell.GetCurrentBranch(repository)
+		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println(branch)
+		if currentBranch != "master" {
+			log.Fatalf("Releases must start from 'master' branch and you are on branch %q", currentBranch)
+		}
+		log.Printf("You are on %q branch\n", currentBranch)
+
+		// Pull the latest changes from origin master
+		log.Printf("Pulling latest changes from origin master\n")
+		out, err := shell.PullMasterBranch(repository)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println(out)
 	},
 }
 

@@ -19,16 +19,27 @@ package shell
 
 import (
 	"os/exec"
+	"strings"
 
 	"github.com/repejota/git-hub"
 )
 
 // GetCurrentBranch ...
 func GetCurrentBranch(repository *ghub.Repository) (string, error) {
-	command := "git symbolic-ref --short HEAD"
-	out, err := exec.Command(command).Output()
+	out, err := exec.Command("git", "symbolic-ref", "--short", "HEAD").Output()
 	if err != nil {
 		return "", err
 	}
-	return string(out), nil
+	sout := strings.Trim(string(out), "\n")
+	return sout, nil
+}
+
+// PullMasterBranch ...
+func PullMasterBranch(repository *ghub.Repository) (string, error) {
+	out, err := exec.Command("git", "pull", "origin", "master").Output()
+	if err != nil {
+		return "", err
+	}
+	sout := string(out)
+	return sout, nil
 }
