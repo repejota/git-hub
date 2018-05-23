@@ -15,4 +15,20 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 
-package ghub
+package shell
+
+import (
+	"os/exec"
+
+	"github.com/repejota/git-hub"
+)
+
+// GetCurrentBranch ...
+func GetCurrentBranch(repository *ghub.Repository) (string, error) {
+	command := "git symbolic-ref --short HEAD"
+	out, err := exec.Command(command).Output()
+	if err != nil {
+		return "", err
+	}
+	return string(out), nil
+}

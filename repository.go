@@ -29,13 +29,16 @@ import (
 
 // Repository ...
 type Repository struct {
+	Path             string
 	GitRepository    *git.Repository
 	GitHubRepository *github.Repository
 }
 
 // OpenRepository opens a repository from a path
 func OpenRepository(path string) (*Repository, error) {
-	repository := &Repository{}
+	repository := &Repository{
+		Path: path,
+	}
 	err := repository.Git(path)
 	if err != nil {
 		return nil, err

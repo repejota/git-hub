@@ -23,6 +23,7 @@ import (
 	"os"
 
 	"github.com/repejota/git-hub"
+	"github.com/repejota/git-hub/shell"
 	"github.com/spf13/cobra"
 )
 
@@ -59,12 +60,11 @@ var ReleaseStartCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		// Get the current branch
-		ref, err := repository.GitRepository.Head()
-		if err != nil {
+		branch, err := shell.GetCurrentBranch(repository)
+		if err != err {
 			log.Fatal(err)
 		}
-		fmt.Println(ref)
+		fmt.Println(branch)
 	},
 }
 
