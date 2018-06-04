@@ -18,6 +18,8 @@
 package shell
 
 import (
+	"fmt"
+	"io/ioutil"
 	"os/exec"
 	"strings"
 
@@ -42,4 +44,59 @@ func PullMasterBranch(repository *ghub.Repository) (string, error) {
 	}
 	sout := string(out)
 	return sout, nil
+}
+
+// CreateLocalGitBranch ...
+func CreateLocalGitBranch(name string) (string, error) {
+	out, err := exec.Command("git", "checkout", "-b", name).Output()
+	if err != nil {
+		return "", err
+	}
+	sout := string(out)
+	return sout, nil
+}
+
+// PushLocalBranchToOrigin ...
+func PushLocalBranchToOrigin(name string) (string, error) {
+	out, err := exec.Command("git", "push", "--set-upstream", "origin", name).Output()
+	if err != nil {
+		return "", err
+	}
+	sout := string(out)
+	return sout, nil
+}
+
+// BumpNextVersion ...
+func BumpNextVersion(nextversion *ghub.SemVer) (string, error) {
+	finalOut := ""
+
+	// update VERSION file contents
+	data := []byte(nextversion.String())
+	err := ioutil.WriteFile("VERSION", data, 0644)
+	if err != nil {
+		return "", nil
+	}
+
+	// commit VERSION changes
+	out, err := exec.Command("git", "add", "VERSION").Output()
+	if err != nil {
+		return "", err
+	}
+	finalOut = fmt.Sprintf("%s%s", finalOut, string(out))
+
+	commitMsg := fmt.Sprintf("Bump %s", nextversion)
+	out, err = exec.Command("git", "commit", "VERSION", "-m", commitMsg).Output()
+	if err != nil {
+		return "", err
+	}
+	finalOut = fmt.Sprintf("%s%s", finalOut, string(out))
+
+	// push VERSION bump commit
+	out, err = exec.Command("git", "push").Output()
+	if err != nil {
+		return "", err
+	}
+	finalOut = fmt.Sprintf("%s%s", finalOut, string(out))
+
+	return finalOut, nil
 }

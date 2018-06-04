@@ -20,6 +20,7 @@ package ghub
 import (
 	"context"
 	"errors"
+	"io/ioutil"
 	"log"
 	"strings"
 
@@ -80,6 +81,23 @@ func (r *Repository) GetRemoteGithubRepository(remoteName string) error {
 	}
 	r.GitHubRepository = githubRepository
 	return nil
+}
+
+// NextVersion ...
+func (r *Repository) NextVersion() (*SemVer, error) {
+	data, err := ioutil.ReadFile("VERSION")
+	if err != nil {
+		return nil, err
+	}
+
+	version, err := NewSemVer(string(data))
+	if err != nil {
+		return nil, err
+	}
+
+	version.Patch = version.Patch + 1
+
+	return version, nil
 }
 
 // ParseGithubURL ...

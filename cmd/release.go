@@ -80,6 +80,35 @@ var ReleaseStartCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 		log.Println(out)
+
+		// Calculate new version
+		nextVersion, err := repository.NextVersion()
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println("Next version is:", nextVersion)
+
+		// Create local release branch
+		releaseBranchName := fmt.Sprintf("release/%s", nextVersion)
+		out, err = shell.CreateLocalGitBranch(releaseBranchName)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Printf("Created local branch: %s\n", releaseBranchName)
+
+		// Push local release branch to origin
+		out, err = shell.PushLocalBranchToOrigin(releaseBranchName)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println(out)
+
+		// Bump nextVersion
+		out, err = shell.BumpNextVersion(nextVersion)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println(out)
 	},
 }
 
