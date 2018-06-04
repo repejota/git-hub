@@ -82,7 +82,7 @@ var IssueStartCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Invalid issue ID")
 		}
-		log.Printf("Start working on the issue: %d\n", issueID)
+		log.Printf("Start working on the issue #%d\n", issueID)
 
 		repositoryPath := "."
 
@@ -109,6 +109,12 @@ var IssueStartCmd = &cobra.Command{
 		issue, err := ghub.GetIssue(org, repo, issueID)
 		if err != nil {
 			log.Fatal(err)
+		}
+
+		// Check if the issue is open
+		if issue.GetState() != "open" {
+			log.Printf("Issue #%d %q is %s, you can't work on it.\n", issue.GetNumber(), issue.GetTitle(), issue.GetState())
+			os.Exit(1)
 		}
 
 		// Assign User to the Issue
