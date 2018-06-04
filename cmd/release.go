@@ -63,7 +63,7 @@ var ReleaseStartCmd = &cobra.Command{
 		}
 		log.Printf("Open repository at %q successfully\n", path)
 
-		// Get the current branch
+		// Get the current branch ( check if we are on master )
 		currentBranch, err := shell.GetCurrentBranch(repository)
 		if err != nil {
 			log.Fatal(err)
@@ -115,9 +115,91 @@ var ReleaseStartCmd = &cobra.Command{
 // ReleaseFinishCmd represents the release finish command
 var ReleaseFinishCmd = &cobra.Command{
 	Use:   "finish",
-	Short: "Finish an release",
-	Long:  `Finish working on an release`,
+	Short: "Finish a release",
+	Long:  `Finish and publish a release`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("git hub release finish")
+		path := "."
+
+		// Open repository
+		repository, err := ghub.OpenRepository(path)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Printf("Open repository at %q successfully\n", path)
+
+		// Get current branch (release branch)
+		releaseBranchName, err := shell.GetCurrentBranch(repository)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println("Finishing release", releaseBranchName)
+
+		// Go to master branch
+		out, err := shell.GoGitBranch("master")
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println("Checking out master branch")
+		log.Println(out)
+
+		// Pull and rebase
+		out, err = shell.PullAndRebase()
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println("Pull and rebase master branch")
+		log.Println(out)
+
+		// Merge release branch into master
+		out, err = shell.MergeBranch(releaseBranchName)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Printf("Merging %s branch into master\n", releaseBranchName)
+		log.Println(out)
+
+		// Push changes
+		out, err = shell.GitPush()
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println("Pushing merge changes into master")
+		log.Println(out)
+
+		// Create a new version Tag
+		currentVersion, err := repository.GetCurrentVersion()
+		if err != nil {
+			log.Fatal(err)
+		}
+		out, err = shell.CreateGitTag(currentVersion.String())
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println("Creating a local tag", currentVersion)
+		log.Println(out)
+
+		// Push tags
+		out, err = shell.GitPushTags()
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println("Pushing tag", currentVersion)
+		log.Println(out)
+
+		// Delete remote release branch
+		out, err = shell.DeleteRemoteBranch(releaseBranchName)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println("Deleting remote branch", releaseBranchName)
+		log.Println(out)
+
+		// Delete local release branch
+		out, err = shell.DeleteLocalBranch(releaseBranchName)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println("Deleting local branch", releaseBranchName)
+		log.Println(out)
 	},
 }
