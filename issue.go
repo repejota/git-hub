@@ -19,19 +19,76 @@ package ghub
 
 import (
 	"context"
+	"fmt"
+	"os"
+	"regexp"
+	"strings"
 
 	"github.com/google/go-github/github"
+	"golang.org/x/oauth2"
 )
 
 // ListIssuesByRepo ...
 func ListIssuesByRepo(repoFullName string) ([]*github.Issue, error) {
 	organization, repository := ParseRepositoryFullName(repoFullName)
 	ctx := context.Background()
-	client := github.NewClient(nil)
+	githubToken := os.Getenv("GITHUB_TOKEN")
+	ts := oauth2.StaticTokenSource(
+		&oauth2.Token{
+			AccessToken: githubToken,
+		},
+	)
+	tc := oauth2.NewClient(ctx, ts)
+	client := github.NewClient(tc)
 	options := &github.IssueListByRepoOptions{}
 	issues, _, err := client.Issues.ListByRepo(ctx, organization, repository, options)
 	if err != nil {
 		return nil, err
 	}
 	return issues, nil
+}
+
+// GetIssue ...
+func GetIssue(organization string, repository string, issueID int) (*github.Issue, error) {
+	ctx := context.Background()
+	githubToken := os.Getenv("GITHUB_TOKEN")
+	ts := oauth2.StaticTokenSource(
+		&oauth2.Token{
+			AccessToken: githubToken,
+		},
+	)
+	tc := oauth2.NewClient(ctx, ts)
+	client := github.NewClient(tc)
+	issue, _, err := client.Issues.Get(ctx, organization, repository, issueID)
+	if err != nil {
+		return nil, err
+	}
+	return issue, nil
+}
+
+// AssignUserToIssue ...
+func AssignUserToIssue(organization string, repository string, user *github.User, issue *github.Issue) error {
+	ctx := context.Background()
+	githubToken := os.Getenv("GITHUB_TOKEN")
+	ts := oauth2.StaticTokenSource(
+		&oauth2.Token{
+			AccessToken: githubToken,
+		},
+	)
+	tc := oauth2.NewClient(ctx, ts)
+	client := github.NewClient(tc)
+	users := []string{*user.Login}
+	issue, _, err := client.Issues.AddAssignees(ctx, organization, repository, *issue.Number, users)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// SlugifyIssue ...
+func SlugifyIssue(issue *github.Issue) string {
+	var re = regexp.MustCompile("[^a-z0-9]+")
+	slugifyTitle := strings.Trim(re.ReplaceAllString(strings.ToLower(issue.GetTitle()), "-"), "-")
+	slugIssue := fmt.Sprintf("%d-%s", issue.GetNumber(), slugifyTitle)
+	return slugIssue
 }

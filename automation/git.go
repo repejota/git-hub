@@ -22,12 +22,10 @@ import (
 	"io/ioutil"
 	"os/exec"
 	"strings"
-
-	"github.com/repejota/git-hub"
 )
 
 // GetCurrentBranch ...
-func GetCurrentBranch(repository *ghub.Repository) (string, error) {
+func GetCurrentBranch() (string, error) {
 	out, err := exec.Command("git", "symbolic-ref", "--short", "HEAD").Output()
 	if err != nil {
 		return "", err
@@ -37,7 +35,7 @@ func GetCurrentBranch(repository *ghub.Repository) (string, error) {
 }
 
 // PullMasterBranch ...
-func PullMasterBranch(repository *ghub.Repository) (string, error) {
+func PullMasterBranch() (string, error) {
 	out, err := exec.Command("git", "pull", "origin", "master").Output()
 	if err != nil {
 		return "", err
@@ -67,12 +65,11 @@ func PushLocalBranchToOrigin(name string) (string, error) {
 }
 
 // BumpNextVersion ...
-func BumpNextVersion(nextversion *ghub.SemVer) (string, error) {
+func BumpNextVersion(nextversion string) (string, error) {
 	finalOut := ""
 
 	// update VERSION file contents
-	data := []byte(nextversion.String())
-	sdata := strings.Trim(string(data), "\n")
+	sdata := strings.Trim(nextversion, "\n")
 	err := ioutil.WriteFile("VERSION", []byte(sdata), 0644)
 	if err != nil {
 		return "", nil

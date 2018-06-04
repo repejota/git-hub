@@ -21,8 +21,10 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 
-	"github.com/repejota/git-hub"
+	ghub "github.com/repejota/git-hub"
+	"github.com/repejota/git-hub/automation"
 	"github.com/spf13/cobra"
 )
 
@@ -70,7 +72,65 @@ var IssueStartCmd = &cobra.Command{
 	Short: "Start an issue",
 	Long:  `Start working on an issue`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("git hub list start")
+
+		if len(args) == 0 {
+			log.Fatalf("An issue ID is required")
+		}
+		issueID, err := strconv.Atoi(args[0])
+		if err != nil {
+			log.Fatalf("Invalid issue ID")
+		}
+		log.Printf("Start working on the issue: %d\n", issueID)
+
+		repositoryPath := "."
+
+		repository := &ghub.Repository{}
+
+		err = repository.Git(repositoryPath)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		err = repository.GetRemoteGithubRepository("origin")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// Get User
+		user, err := ghub.GetAuthenticatedUser()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// Get Issue
+		org, repo := ghub.ParseRepositoryFullName(*repository.GitHubRepository.FullName)
+		issue, err := ghub.GetIssue(org, repo, issueID)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// Assign User to the Issue
+		err = ghub.AssignUserToIssue(org, repo, user, issue)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println("Assigned issue to", user.GetLogin())
+
+		// Create local issue branch
+		issueBranchName := fmt.Sprintf("issue/%s", ghub.SlugifyIssue(issue))
+		out, err := automation.CreateLocalGitBranch(issueBranchName)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println("Created local branch", issueBranchName)
+		log.Println(out)
+
+		// Push local release branch to origin
+		out, err = automation.PushLocalBranchToOrigin(issueBranchName)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println(out)
 	},
 }
 
