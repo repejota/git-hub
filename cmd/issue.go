@@ -44,6 +44,7 @@ var IssueListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List issues",
 	Long:  `List repository issues`,
+	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Open repository
 		repository, err := ghub.OpenRepository(".")
@@ -68,9 +69,10 @@ var IssueListCmd = &cobra.Command{
 
 // IssueStartCmd represents the issue start command
 var IssueStartCmd = &cobra.Command{
-	Use:   "start",
+	Use:   "start [issue number]",
 	Short: "Start an issue",
 	Long:  `Start working on an issue`,
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 
 		if len(args) == 0 {
@@ -139,6 +141,7 @@ var IssueFinishCmd = &cobra.Command{
 	Use:   "finish",
 	Short: "Finish an issue",
 	Long:  `Finish working on an issue`,
+	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("git hub issue finish")
 	},

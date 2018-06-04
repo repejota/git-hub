@@ -30,6 +30,7 @@ var InfoCmd = &cobra.Command{
 	Use:   "info",
 	Short: "Get information about the repository",
 	Long:  `Get information about the repository and its github project`,
+	Args:  cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Open repository
 		repository, err := ghub.OpenRepository(".")

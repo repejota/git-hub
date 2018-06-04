@@ -43,6 +43,7 @@ var ReleaseListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List releases",
 	Long:  `List releases`,
+	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("git hub release list")
 	},
@@ -53,6 +54,7 @@ var ReleaseStartCmd = &cobra.Command{
 	Use:   "start",
 	Short: "Start a release",
 	Long:  `Start working on an release`,
+	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 		path := "."
 
@@ -118,6 +120,7 @@ var ReleaseFinishCmd = &cobra.Command{
 	Use:   "finish",
 	Short: "Finish a release",
 	Long:  `Finish and publish a release`,
+	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 		path := "."
 
