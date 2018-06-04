@@ -92,11 +92,87 @@ func BumpNextVersion(nextversion *ghub.SemVer) (string, error) {
 	finalOut = fmt.Sprintf("%s%s", finalOut, string(out))
 
 	// push VERSION bump commit
-	out, err = exec.Command("git", "push").Output()
+	sout, err := GitPush()
 	if err != nil {
 		return "", err
 	}
-	finalOut = fmt.Sprintf("%s%s", finalOut, string(out))
+	finalOut = fmt.Sprintf("%s%s", finalOut, sout)
 
 	return finalOut, nil
+}
+
+// GitPush ...
+func GitPush() (string, error) {
+	out, err := exec.Command("git", "push").Output()
+	if err != nil {
+		return "", err
+	}
+	return string(out), nil
+}
+
+// GoGitBranch ...
+func GoGitBranch(name string) (string, error) {
+	out, err := exec.Command("git", "checkout", name).Output()
+	if err != nil {
+		return "", err
+	}
+	sout := string(out)
+	return sout, nil
+}
+
+// PullAndRebase ...
+func PullAndRebase() (string, error) {
+	out, err := exec.Command("git", "pull", "--rebase", "--prune").Output()
+	if err != nil {
+		return "", err
+	}
+	sout := string(out)
+	return sout, nil
+}
+
+// MergeBranch ...
+func MergeBranch(branchName string) (string, error) {
+	out, err := exec.Command("git", "merge", "--no-ff", "--no-edit", branchName).Output()
+	if err != nil {
+		return "", err
+	}
+	sout := string(out)
+	return sout, nil
+}
+
+// CreateGitTag ...
+func CreateGitTag(tagName string) (string, error) {
+	out, err := exec.Command("git", "tag", "-a", tagName, "-m", "Tagged as tagName").Output()
+	if err != nil {
+		return "", nil
+	}
+	sout := string(out)
+	return sout, nil
+}
+
+// GitPushTags ...
+func GitPushTags() (string, error) {
+	out, err := exec.Command("git", "push", "--tags").Output()
+	if err != nil {
+		return "", err
+	}
+	return string(out), nil
+}
+
+// DeleteRemoteBranch ...
+func DeleteRemoteBranch(branchName string) (string, error) {
+	out, err := exec.Command("git", "branch", "-D", "origin", branchName).Output()
+	if err != nil {
+		return "", err
+	}
+	return string(out), nil
+}
+
+// DeleteLocalBranch ...
+func DeleteLocalBranch(branchName string) (string, error) {
+	out, err := exec.Command("git", "branch", "-D", branchName).Output()
+	if err != nil {
+		return "", err
+	}
+	return string(out), nil
 }

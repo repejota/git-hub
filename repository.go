@@ -83,14 +83,22 @@ func (r *Repository) GetRemoteGithubRepository(remoteName string) error {
 	return nil
 }
 
-// NextVersion ...
-func (r *Repository) NextVersion() (*SemVer, error) {
+// CurrentVersion ...
+func (r *Repository) GetCurrentVersion() (*SemVer, error) {
 	data, err := ioutil.ReadFile("VERSION")
 	if err != nil {
 		return nil, err
 	}
-
 	version, err := NewSemVer(string(data))
+	if err != nil {
+		return nil, err
+	}
+	return version, nil
+}
+
+// NextVersion ...
+func (r *Repository) NextVersion() (*SemVer, error) {
+	version, err := r.GetCurrentVersion()
 	if err != nil {
 		return nil, err
 	}
