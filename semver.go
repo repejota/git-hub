@@ -35,21 +35,21 @@ func NewSemVer(version string) (*SemVer, error) {
 	semver := &SemVer{}
 	dataParts := strings.Split(string(version), ".")
 	if len(dataParts) < 2 {
-		return nil, fmt.Errorf("ERROR calculating next version, invalid VERSION contents: %s", string(version))
+		return nil, fmt.Errorf("ERROR invalid VERSION format: %s", string(version))
 	}
 	part, err := strconv.Atoi(dataParts[0])
 	if err != nil {
-		return nil, fmt.Errorf("ERROR calculating next version, invalid Major version:%q", dataParts)
+		return nil, fmt.Errorf("ERROR invalid Major version: %s", string(version))
 	}
 	semver.Major = part
 	part, err = strconv.Atoi(dataParts[1])
 	if err != nil {
-		return nil, fmt.Errorf("ERROR calculating next version, invalid Minor version: %q", dataParts)
+		return nil, fmt.Errorf("ERROR invalid Minor version: %s", string(version))
 	}
 	semver.Minor = part
 	part, err = strconv.Atoi(dataParts[2])
 	if err != nil {
-		return nil, fmt.Errorf("ERROR calculating next version, invalid Patch version: %q", dataParts)
+		return nil, fmt.Errorf("ERROR invalid Patch version: %s", string(version))
 	}
 	semver.Patch = part
 	return semver, nil

@@ -16,3 +16,23 @@
 // under the License.
 
 package ghub_test
+
+import (
+	"testing"
+
+	"github.com/repejota/git-hub"
+)
+
+func TestParseRepositoryFullName(t *testing.T) {
+	repositoryFullName := "myorganization/myrepository"
+	expectedOrganization := "myorganization"
+	expectedRepository := "myrepository"
+
+	org, repo := ghub.ParseRepositoryFullName(repositoryFullName)
+	if org != expectedOrganization {
+		t.Fatalf("Expected organization %q but got %q", expectedOrganization, org)
+	}
+	if repo != expectedRepository {
+		t.Fatalf("Expected organization %q but got %q", expectedRepository, repo)
+	}
+}

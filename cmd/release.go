@@ -23,7 +23,7 @@ import (
 	"os"
 
 	"github.com/repejota/git-hub"
-	"github.com/repejota/git-hub/shell"
+	"github.com/repejota/git-hub/automation"
 	"github.com/spf13/cobra"
 )
 
@@ -64,7 +64,7 @@ var ReleaseStartCmd = &cobra.Command{
 		log.Printf("Open repository at %q successfully\n", path)
 
 		// Get the current branch ( check if we are on master )
-		currentBranch, err := shell.GetCurrentBranch(repository)
+		currentBranch, err := automation.GetCurrentBranch(repository)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -75,7 +75,7 @@ var ReleaseStartCmd = &cobra.Command{
 
 		// Pull the latest changes from origin master
 		log.Printf("Pulling latest changes from origin master\n")
-		out, err := shell.PullMasterBranch(repository)
+		out, err := automation.PullMasterBranch(repository)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -90,21 +90,21 @@ var ReleaseStartCmd = &cobra.Command{
 
 		// Create local release branch
 		releaseBranchName := fmt.Sprintf("release/%s", nextVersion)
-		out, err = shell.CreateLocalGitBranch(releaseBranchName)
+		out, err = automation.CreateLocalGitBranch(releaseBranchName)
 		if err != nil {
 			log.Fatal(err)
 		}
 		log.Printf("Created local branch: %s\n", releaseBranchName)
 
 		// Push local release branch to origin
-		out, err = shell.PushLocalBranchToOrigin(releaseBranchName)
+		out, err = automation.PushLocalBranchToOrigin(releaseBranchName)
 		if err != nil {
 			log.Fatal(err)
 		}
 		log.Println(out)
 
 		// Bump nextVersion
-		out, err = shell.BumpNextVersion(nextVersion)
+		out, err = automation.BumpNextVersion(nextVersion)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -128,14 +128,14 @@ var ReleaseFinishCmd = &cobra.Command{
 		log.Printf("Open repository at %q successfully\n", path)
 
 		// Get current branch (release branch)
-		releaseBranchName, err := shell.GetCurrentBranch(repository)
+		releaseBranchName, err := automation.GetCurrentBranch(repository)
 		if err != nil {
 			log.Fatal(err)
 		}
 		log.Println("Finishing release", releaseBranchName)
 
 		// Go to master branch
-		out, err := shell.GoGitBranch("master")
+		out, err := automation.GoGitBranch("master")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -143,7 +143,7 @@ var ReleaseFinishCmd = &cobra.Command{
 		log.Println(out)
 
 		// Pull and rebase
-		out, err = shell.PullAndRebase()
+		out, err = automation.PullAndRebase()
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -151,7 +151,7 @@ var ReleaseFinishCmd = &cobra.Command{
 		log.Println(out)
 
 		// Merge release branch into master
-		out, err = shell.MergeBranch(releaseBranchName)
+		out, err = automation.MergeBranch(releaseBranchName)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -159,7 +159,7 @@ var ReleaseFinishCmd = &cobra.Command{
 		log.Println(out)
 
 		// Push changes
-		out, err = shell.GitPush()
+		out, err = automation.GitPush()
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -171,7 +171,7 @@ var ReleaseFinishCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
-		out, err = shell.CreateGitTag(currentVersion.String())
+		out, err = automation.CreateGitTag(currentVersion.String())
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -179,7 +179,7 @@ var ReleaseFinishCmd = &cobra.Command{
 		log.Println(out)
 
 		// Push tags
-		out, err = shell.GitPushTags()
+		out, err = automation.GitPushTags()
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -187,7 +187,7 @@ var ReleaseFinishCmd = &cobra.Command{
 		log.Println(out)
 
 		// Delete remote release branch
-		out, err = shell.DeleteRemoteBranch(releaseBranchName)
+		out, err = automation.DeleteRemoteBranch(releaseBranchName)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -195,7 +195,7 @@ var ReleaseFinishCmd = &cobra.Command{
 		log.Println(out)
 
 		// Delete local release branch
-		out, err = shell.DeleteLocalBranch(releaseBranchName)
+		out, err = automation.DeleteLocalBranch(releaseBranchName)
 		if err != nil {
 			log.Fatal(err)
 		}

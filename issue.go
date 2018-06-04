@@ -25,7 +25,7 @@ import (
 
 // ListIssuesByRepo ...
 func ListIssuesByRepo(repoFullName string) ([]*github.Issue, error) {
-	organization, repository := ParseFullName(repoFullName)
+	organization, repository := ParseRepositoryFullName(repoFullName)
 	ctx := context.Background()
 	client := github.NewClient(nil)
 	options := &github.IssueListByRepoOptions{}
