@@ -63,7 +63,7 @@ var ReleaseStartCmd = &cobra.Command{
 		}
 		log.Printf("Open repository at %q successfully\n", path)
 
-		// Get the current branch
+		// Get the current branch ( check if we are on master )
 		currentBranch, err := shell.GetCurrentBranch(repository)
 		if err != nil {
 			log.Fatal(err)
@@ -139,6 +139,7 @@ var ReleaseFinishCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
+		log.Println("Checking out master branch")
 		log.Println(out)
 
 		// Pull and rebase
@@ -146,6 +147,7 @@ var ReleaseFinishCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
+		log.Println("Pull and rebase master branch")
 		log.Println(out)
 
 		// Merge release branch into master
@@ -153,6 +155,7 @@ var ReleaseFinishCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
+		log.Printf("Merging %s branch into master\n", releaseBranchName)
 		log.Println(out)
 
 		// Push changes
@@ -160,6 +163,7 @@ var ReleaseFinishCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
+		log.Println("Pushing merge changes into master")
 		log.Println(out)
 
 		// Create a new version Tag
@@ -171,6 +175,7 @@ var ReleaseFinishCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
+		log.Println("Creating a local tag", currentVersion)
 		log.Println(out)
 
 		// Push tags
@@ -178,6 +183,7 @@ var ReleaseFinishCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
+		log.Println("Pushing tag", currentVersion)
 		log.Println(out)
 
 		// Delete remote release branch
@@ -185,6 +191,7 @@ var ReleaseFinishCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
+		log.Println("Deleting remote branch", releaseBranchName)
 		log.Println(out)
 
 		// Delete local release branch
@@ -192,6 +199,7 @@ var ReleaseFinishCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
+		log.Println("Deleting local branch", releaseBranchName)
 		log.Println(out)
 	},
 }

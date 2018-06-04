@@ -83,13 +83,14 @@ func (r *Repository) GetRemoteGithubRepository(remoteName string) error {
 	return nil
 }
 
-// CurrentVersion ...
+// GetCurrentVersion ...
 func (r *Repository) GetCurrentVersion() (*SemVer, error) {
 	data, err := ioutil.ReadFile("VERSION")
 	if err != nil {
 		return nil, err
 	}
-	version, err := NewSemVer(string(data))
+	sdata := strings.Trim(string(data), "\n")
+	version, err := NewSemVer(sdata)
 	if err != nil {
 		return nil, err
 	}

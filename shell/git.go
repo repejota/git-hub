@@ -72,7 +72,8 @@ func BumpNextVersion(nextversion *ghub.SemVer) (string, error) {
 
 	// update VERSION file contents
 	data := []byte(nextversion.String())
-	err := ioutil.WriteFile("VERSION", data, 0644)
+	sdata := strings.Trim(string(data), "\n")
+	err := ioutil.WriteFile("VERSION", []byte(sdata), 0644)
 	if err != nil {
 		return "", nil
 	}
@@ -161,7 +162,7 @@ func GitPushTags() (string, error) {
 
 // DeleteRemoteBranch ...
 func DeleteRemoteBranch(branchName string) (string, error) {
-	out, err := exec.Command("git", "branch", "-D", "origin", branchName).Output()
+	out, err := exec.Command("git", "push", "origin", "-d", branchName).Output()
 	if err != nil {
 		return "", err
 	}
@@ -170,7 +171,7 @@ func DeleteRemoteBranch(branchName string) (string, error) {
 
 // DeleteLocalBranch ...
 func DeleteLocalBranch(branchName string) (string, error) {
-	out, err := exec.Command("git", "branch", "-D", branchName).Output()
+	out, err := exec.Command("git", "branch", "-d", branchName).Output()
 	if err != nil {
 		return "", err
 	}
