@@ -18,6 +18,7 @@
 package ghub_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/repejota/git-hub"
@@ -40,5 +41,61 @@ func TestSemVerInstanceStringer(t *testing.T) {
 
 	if version.String() != "1.2.3" {
 		t.Fatalf("Version expected to be %q but got %q", expectedVersion, version.String())
+	}
+}
+
+func TestInvalidVersionFormat(t *testing.T) {
+	version := "invalid_version_format"
+	expectedError := fmt.Sprintf("ERROR invalid VERSION format: %s", version)
+
+	_, err := ghub.NewSemVer(version)
+	if err == nil {
+		t.Fatal(err)
+	}
+
+	if err.Error() != expectedError {
+		t.Fatalf("Invalid error, expected %q but got %q", expectedError, err.Error())
+	}
+}
+
+func TestInvalidMajorVersion(t *testing.T) {
+	version := "a.2.3"
+	expectedError := fmt.Sprintf("ERROR invalid Major version: %s", version)
+
+	_, err := ghub.NewSemVer(version)
+	if err == nil {
+		t.Fatal(err)
+	}
+
+	if err.Error() != expectedError {
+		t.Fatalf("Invalid error, expected %q but got %q", expectedError, err.Error())
+	}
+}
+
+func TestInvalidMinorVersion(t *testing.T) {
+	version := "1.b.3"
+	expectedError := fmt.Sprintf("ERROR invalid Minor version: %s", version)
+
+	_, err := ghub.NewSemVer(version)
+	if err == nil {
+		t.Fatal(err)
+	}
+
+	if err.Error() != expectedError {
+		t.Fatalf("Invalid error, expected %q but got %q", expectedError, err.Error())
+	}
+}
+
+func TestInvalidPatchVersion(t *testing.T) {
+	version := "1.2.c"
+	expectedError := fmt.Sprintf("ERROR invalid Patch version: %s", version)
+
+	_, err := ghub.NewSemVer(version)
+	if err == nil {
+		t.Fatal(err)
+	}
+
+	if err.Error() != expectedError {
+		t.Fatalf("Invalid error, expected %q but got %q", expectedError, err.Error())
 	}
 }
