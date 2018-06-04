@@ -19,8 +19,11 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"os"
 
+	"github.com/repejota/git-hub"
+	"github.com/repejota/git-hub/shell"
 	"github.com/spf13/cobra"
 )
 
@@ -51,7 +54,61 @@ var ReleaseStartCmd = &cobra.Command{
 	Short: "Start a release",
 	Long:  `Start working on an release`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("git hub release start")
+		path := "."
+
+		// Open repository
+		repository, err := ghub.OpenRepository(path)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Printf("Open repository at %q successfully\n", path)
+
+		// Get the current branch
+		currentBranch, err := shell.GetCurrentBranch(repository)
+		if err != nil {
+			log.Fatal(err)
+		}
+		if currentBranch != "master" {
+			log.Fatalf("Releases must start from 'master' branch and you are on branch %q", currentBranch)
+		}
+		log.Printf("You are on %q branch\n", currentBranch)
+
+		// Pull the latest changes from origin master
+		log.Printf("Pulling latest changes from origin master\n")
+		out, err := shell.PullMasterBranch(repository)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println(out)
+
+		// Calculate new version
+		nextVersion, err := repository.NextVersion()
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println("Next version is:", nextVersion)
+
+		// Create local release branch
+		releaseBranchName := fmt.Sprintf("release/%s", nextVersion)
+		out, err = shell.CreateLocalGitBranch(releaseBranchName)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Printf("Created local branch: %s\n", releaseBranchName)
+
+		// Push local release branch to origin
+		out, err = shell.PushLocalBranchToOrigin(releaseBranchName)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println(out)
+
+		// Bump nextVersion
+		out, err = shell.BumpNextVersion(nextVersion)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println(out)
 	},
 }
 

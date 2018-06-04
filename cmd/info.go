@@ -31,11 +31,8 @@ var InfoCmd = &cobra.Command{
 	Short: "Get information about the repository",
 	Long:  `Get information about the repository and its github project`,
 	Run: func(cmd *cobra.Command, args []string) {
-		repositoryPath := "."
-
-		repository := &ghub.Repository{}
-
-		err := repository.Git(repositoryPath)
+		// Open repository
+		repository, err := ghub.OpenRepository(".")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -46,7 +43,7 @@ var InfoCmd = &cobra.Command{
 		}
 
 		// Print info
-		fmt.Printf("Git Repository Path: %s\n", repositoryPath)
+		fmt.Printf("Git Repository Path: %s\n", ".")
 		fmt.Printf("GitHub Repository ID: %d\n", repository.GitHubRepository.ID)
 		fmt.Printf("GitHub Repository Full Name: %s\n", *repository.GitHubRepository.FullName)
 		fmt.Printf("GitHub Repository HTML URL: %s\n", *repository.GitHubRepository.HTMLURL)
