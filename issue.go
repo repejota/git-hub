@@ -19,7 +19,10 @@ package ghub
 
 import (
 	"context"
+	"fmt"
 	"os"
+	"regexp"
+	"strings"
 
 	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
@@ -46,8 +49,7 @@ func ListIssuesByRepo(repoFullName string) ([]*github.Issue, error) {
 }
 
 // GetIssue ...
-func GetIssue(repoFullName string, issueID int) (*github.Issue, error) {
-	organization, repository := ParseFullName(repoFullName)
+func GetIssue(organization string, repository string, issueID int) (*github.Issue, error) {
 	ctx := context.Background()
 	githubToken := os.Getenv("GITHUB_TOKEN")
 	ts := oauth2.StaticTokenSource(
@@ -65,8 +67,7 @@ func GetIssue(repoFullName string, issueID int) (*github.Issue, error) {
 }
 
 // AssignUserToIssue ...
-func AssignUserToIssue(repoFullName string, user *github.User, issue *github.Issue) error {
-	organization, repository := ParseFullName(repoFullName)
+func AssignUserToIssue(organization string, repository string, user *github.User, issue *github.Issue) error {
 	ctx := context.Background()
 	githubToken := os.Getenv("GITHUB_TOKEN")
 	ts := oauth2.StaticTokenSource(
@@ -82,4 +83,12 @@ func AssignUserToIssue(repoFullName string, user *github.User, issue *github.Iss
 		return err
 	}
 	return nil
+}
+
+// SlugifyIssue ...
+func SlugifyIssue(issue *github.Issue) string {
+	var re = regexp.MustCompile("[^a-z0-9]+")
+	slugifyTitle := strings.Trim(re.ReplaceAllString(strings.ToLower(issue.GetTitle()), "-"), "-")
+	slugIssue := fmt.Sprintf("%d-%s", issue.GetNumber(), slugifyTitle)
+	return slugIssue
 }

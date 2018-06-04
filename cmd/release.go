@@ -64,7 +64,7 @@ var ReleaseStartCmd = &cobra.Command{
 		log.Printf("Open repository at %q successfully\n", path)
 
 		// Get the current branch ( check if we are on master )
-		currentBranch, err := automation.GetCurrentBranch(repository)
+		currentBranch, err := automation.GetCurrentBranch()
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -75,7 +75,7 @@ var ReleaseStartCmd = &cobra.Command{
 
 		// Pull the latest changes from origin master
 		log.Printf("Pulling latest changes from origin master\n")
-		out, err := automation.PullMasterBranch(repository)
+		out, err := automation.PullMasterBranch()
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -95,6 +95,7 @@ var ReleaseStartCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 		log.Printf("Created local branch: %s\n", releaseBranchName)
+		log.Println(out)
 
 		// Push local release branch to origin
 		out, err = automation.PushLocalBranchToOrigin(releaseBranchName)
@@ -104,7 +105,7 @@ var ReleaseStartCmd = &cobra.Command{
 		log.Println(out)
 
 		// Bump nextVersion
-		out, err = automation.BumpNextVersion(nextVersion)
+		out, err = automation.BumpNextVersion(nextVersion.String())
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -128,7 +129,7 @@ var ReleaseFinishCmd = &cobra.Command{
 		log.Printf("Open repository at %q successfully\n", path)
 
 		// Get current branch (release branch)
-		releaseBranchName, err := automation.GetCurrentBranch(repository)
+		releaseBranchName, err := automation.GetCurrentBranch()
 		if err != nil {
 			log.Fatal(err)
 		}

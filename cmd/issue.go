@@ -23,7 +23,8 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/repejota/git-hub"
+	ghub "github.com/repejota/git-hub"
+	"github.com/repejota/git-hub/automation"
 	"github.com/spf13/cobra"
 )
 
@@ -102,16 +103,34 @@ var IssueStartCmd = &cobra.Command{
 		}
 
 		// Get Issue
-		issue, err := ghub.GetIssue(*repository.GitHubRepository.FullName, issueID)
+		org, repo := ghub.ParseRepositoryFullName(*repository.GitHubRepository.FullName)
+		issue, err := ghub.GetIssue(org, repo, issueID)
 		if err != nil {
 			log.Fatal(err)
 		}
 
 		// Assign User to the Issue
-		err = ghub.AssignUserToIssue(*repository.GitHubRepository.FullName, user, issue)
+		err = ghub.AssignUserToIssue(org, repo, user, issue)
 		if err != nil {
 			log.Fatal(err)
 		}
+		log.Println("Assigned issue to", user.GetLogin())
+
+		// Create local issue branch
+		issueBranchName := fmt.Sprintf("issue/%s", ghub.SlugifyIssue(issue))
+		out, err := automation.CreateLocalGitBranch(issueBranchName)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println("Created local branch", issueBranchName)
+		log.Println(out)
+
+		// Push local release branch to origin
+		out, err = automation.PushLocalBranchToOrigin(issueBranchName)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println(out)
 	},
 }
 
