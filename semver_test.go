@@ -16,3 +16,29 @@
 // under the License.
 
 package ghub_test
+
+import (
+	"testing"
+
+	"github.com/repejota/git-hub"
+)
+
+func TestSemVerInstance(t *testing.T) {
+	_, err := ghub.NewSemVer("1.2.3")
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestSemVerInstanceStringer(t *testing.T) {
+	expectedVersion := "1.2.3"
+
+	version, err := ghub.NewSemVer(expectedVersion)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if version.String() != "1.2.3" {
+		t.Fatalf("Version expected to be %q but got %q", expectedVersion, version.String())
+	}
+}
