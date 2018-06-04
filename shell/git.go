@@ -143,7 +143,8 @@ func MergeBranch(branchName string) (string, error) {
 
 // CreateGitTag ...
 func CreateGitTag(tagName string) (string, error) {
-	out, err := exec.Command("git", "tag", "-a", tagName, "-m", "Tagged as tagName").Output()
+	msgTag := fmt.Sprintf("Release %s", tagName)
+	out, err := exec.Command("git", "tag", "-a", tagName, "-m", msgTag).Output()
 	if err != nil {
 		return "", nil
 	}
