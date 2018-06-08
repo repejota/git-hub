@@ -39,7 +39,17 @@ var IssueNewCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		url := repo.GetNewIssueURL()
+		// --repository flag
+		repository := *repo.GitHubRepository.FullName
+		if Repository != "" {
+			repository = Repository
+		}
+
+		url := repo.GetNewIssueURL(repository)
 		automation.OpenURL(url)
 	},
+}
+
+func init() {
+	IssueNewCmd.Flags().StringVarP(&Repository, "repository", "r", "", "Repository to create the issue")
 }
