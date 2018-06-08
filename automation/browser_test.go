@@ -15,31 +15,4 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 
-package cmd
-
-import (
-	"log"
-
-	"github.com/repejota/git-hub/automation"
-
-	ghub "github.com/repejota/git-hub"
-	"github.com/spf13/cobra"
-)
-
-// IssueNewCmd represents the issue start command
-var IssueNewCmd = &cobra.Command{
-	Use:   "new",
-	Short: "Create an issue",
-	Long:  `Create an issue`,
-	Args:  cobra.NoArgs,
-	Run: func(cmd *cobra.Command, args []string) {
-		// Open repository
-		repo, err := ghub.OpenRepository(".")
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		url := repo.GetNewIssueURL()
-		automation.OpenURL(url)
-	},
-}
+package automation_test
