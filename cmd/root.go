@@ -28,6 +28,9 @@ import (
 // VerboseFlag ...
 var VerboseFlag bool
 
+// GitHubToken ...
+var GitHubToken string
+
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
 	Use:   "git-hub",
@@ -64,6 +67,7 @@ func init() {
 	// Setup Cobra
 	cobra.OnInitialize(initConfig)
 	RootCmd.PersistentFlags().BoolVarP(&VerboseFlag, "verbose", "v", false, "enable verbose mode")
+	RootCmd.PersistentFlags().StringVarP(&GitHubToken, "github-token", "", "", "Github Token")
 }
 
 // initConfig reads in config file and ENV variables if set.

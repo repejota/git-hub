@@ -23,9 +23,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"os"
 	"strings"
 
+	"github.com/fatih/color"
 	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
 	git "gopkg.in/src-d/go-git.v4"
@@ -34,14 +34,16 @@ import (
 // Repository ...
 type Repository struct {
 	Path             string
+	GitHubToken      string
 	GitRepository    *git.Repository
 	GitHubRepository *github.Repository
 }
 
 // OpenRepository opens a repository from a path
-func OpenRepository(path string) (*Repository, error) {
+func OpenRepository(path string, gitHubToken string) (*Repository, error) {
 	repository := &Repository{
-		Path: path,
+		Path:        path,
+		GitHubToken: gitHubToken,
 	}
 	err := repository.Git(path)
 	if err != nil {
@@ -52,6 +54,8 @@ func OpenRepository(path string) (*Repository, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	log.Println(color.YellowString("Opened repository at %q", path))
 
 	return repository, nil
 }
@@ -89,17 +93,19 @@ func (r *Repository) GetRemoteGithubRepository(remoteName string) error {
 	}
 	// Get repository info from Github API
 	ctx := context.Background()
-	githubToken := os.Getenv("GITHUB_TOKEN")
+	if r.GitHubToken == "" {
+		return fmt.Errorf("A valid GitHub Token is required")
+	}
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{
-			AccessToken: githubToken,
+			AccessToken: r.GitHubToken,
 		},
 	)
 	tc := oauth2.NewClient(ctx, ts)
 	client := github.NewClient(tc)
 	githubRepository, _, err := client.Repositories.Get(ctx, organization, repository)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	r.GitHubRepository = githubRepository
 	return nil

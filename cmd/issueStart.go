@@ -24,6 +24,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/fatih/color"
 	ghub "github.com/repejota/git-hub"
 	"github.com/repejota/git-hub/automation"
 	"github.com/spf13/cobra"
@@ -47,6 +48,15 @@ var IssueStartCmd = &cobra.Command{
 			log.SetOutput(os.Stdout)
 		}
 
+		// --github-token
+		// Get the GitHub Token from env or from flag
+		gitHubToken := os.Getenv("GITHUB_TOKEN")
+		if GitHubToken != "" {
+			gitHubToken = GitHubToken
+		}
+
+		log.Println(color.YellowString("GitHub Token: %s", gitHubToken))
+
 		// An issue id is required
 		if len(args) == 0 {
 			log.Fatalf("An issue ID is required")
@@ -59,9 +69,11 @@ var IssueStartCmd = &cobra.Command{
 		}
 
 		// Open repository
-		r, err := ghub.OpenRepository(".")
+		path := "."
+		r, err := ghub.OpenRepository(path, gitHubToken)
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println(color.RedString("ERROR: %s", err.Error()))
+			os.Exit(1)
 		}
 
 		// --repository flag
