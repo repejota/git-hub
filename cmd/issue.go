@@ -48,20 +48,26 @@ var IssueListCmd = &cobra.Command{
 	Short: "List issues",
 	Long:  `List repository issues`,
 	Args:  cobra.NoArgs,
-
 	Run: func(cmd *cobra.Command, args []string) {
 		// Open repository
-		repository, err := ghub.OpenRepository(".")
+		repo, err := ghub.OpenRepository(".")
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		err = repository.GetRemoteGithubRepository("origin")
+		err = repo.GetRemoteGithubRepository("origin")
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		issues, err := ghub.ListIssuesByRepo(*repository.GitHubRepository.FullName)
+		// --repository flag
+		repository := *repo.GitHubRepository.FullName
+		if Repository != "" {
+			repository = Repository
+		}
+
+		// List issues by repo
+		issues, err := ghub.ListIssuesByRepo(repository)
 		if err != nil {
 			log.Fatal(err)
 		}
