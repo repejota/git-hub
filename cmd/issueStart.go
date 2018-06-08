@@ -81,8 +81,6 @@ var IssueStartCmd = &cobra.Command{
 			repository = Repository
 		}
 
-		log.Printf("Start working on the issue %s#%d\n", repository, issueID)
-
 		// Get User
 		user, err := ghub.GetAuthenticatedUser()
 		if err != nil {
@@ -93,7 +91,8 @@ var IssueStartCmd = &cobra.Command{
 		org, repo := ghub.ParseRepositoryFullName(repository)
 		issue, err := ghub.GetIssue(org, repo, issueID)
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println(color.RedString("ERROR: %s", err.Error()))
+			os.Exit(1)
 		}
 
 		// Check if the issue is open
