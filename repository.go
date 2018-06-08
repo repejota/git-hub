@@ -57,8 +57,8 @@ func OpenRepository(path string) (*Repository, error) {
 }
 
 // GetNewIssueURL ...
-func (r *Repository) GetNewIssueURL() string {
-	url := fmt.Sprintf("https://github.com/%s/issues/new", *r.GitHubRepository.FullName)
+func (r *Repository) GetNewIssueURL(repositoryFullName string) string {
+	url := fmt.Sprintf("https://github.com/%s/issues/new", repositoryFullName)
 	return url
 }
 
