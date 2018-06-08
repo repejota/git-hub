@@ -11,9 +11,6 @@ DIST_INCLUDE_FILES=README.md LICENSE VERSION
 # Setup -ldflags option for go build here, interpolate the variable values
 LDFLAGS=-ldflags "-X main.Version=${VERSION} -X main.Build=${BUILD}"
 
-DIST_GOOS = "linux darwin windows"
-DIST_GOARCH = "386 amd64"
-
 # Build & Install
 
 install:		## Build and install package on your system
