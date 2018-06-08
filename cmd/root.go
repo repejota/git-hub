@@ -18,11 +18,15 @@
 package cmd
 
 import (
+	"io/ioutil"
 	"log"
 	"os"
 
 	"github.com/spf13/cobra"
 )
+
+// VerboseFlag ...
+var VerboseFlag bool
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
@@ -30,6 +34,17 @@ var RootCmd = &cobra.Command{
 	Short: "Automate git and github",
 	Long:  `git-hub automates git and github flow of work`,
 	Run: func(cmd *cobra.Command, args []string) {
+		log.SetFlags(0)
+
+		// by default logging is off
+		log.SetOutput(ioutil.Discard)
+
+		// --verbose
+		// enable logging if verbose mode
+		if VerboseFlag {
+			log.SetOutput(os.Stdout)
+		}
+
 		cmd.Usage()
 		os.Exit(0)
 	},
@@ -48,6 +63,7 @@ func Execute() {
 func init() {
 	// Setup Cobra
 	cobra.OnInitialize(initConfig)
+	RootCmd.PersistentFlags().BoolVarP(&VerboseFlag, "verbose", "v", false, "enable verbose mode")
 }
 
 // initConfig reads in config file and ENV variables if set.

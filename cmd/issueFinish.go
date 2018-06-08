@@ -19,6 +19,9 @@ package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -30,6 +33,17 @@ var IssueFinishCmd = &cobra.Command{
 	Long:  `Finish working on an issue`,
 	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
+		log.SetFlags(0)
+
+		// by default logging is off
+		log.SetOutput(ioutil.Discard)
+
+		// --verbose
+		// enable logging if verbose mode
+		if VerboseFlag {
+			log.SetOutput(os.Stdout)
+		}
+
 		fmt.Println("git hub issue finish")
 	},
 }

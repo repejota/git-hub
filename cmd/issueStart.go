@@ -19,6 +19,7 @@ package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"strconv"
@@ -35,6 +36,17 @@ var IssueStartCmd = &cobra.Command{
 	Long:  `Start working on an issue`,
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
+		log.SetFlags(0)
+
+		// by default logging is off
+		log.SetOutput(ioutil.Discard)
+
+		// --verbose
+		// enable logging if verbose mode
+		if VerboseFlag {
+			log.SetOutput(os.Stdout)
+		}
+
 		// An issue id is required
 		if len(args) == 0 {
 			log.Fatalf("An issue ID is required")

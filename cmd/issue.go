@@ -18,6 +18,8 @@
 package cmd
 
 import (
+	"io/ioutil"
+	"log"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -32,6 +34,17 @@ var IssueCmd = &cobra.Command{
 	Short: "Get information issues",
 	Long:  `Get information about the repository issues`,
 	Run: func(cmd *cobra.Command, args []string) {
+		log.SetFlags(0)
+
+		// by default logging is off
+		log.SetOutput(ioutil.Discard)
+
+		// --verbose
+		// enable logging if verbose mode
+		if VerboseFlag {
+			log.SetOutput(os.Stdout)
+		}
+
 		cmd.Usage()
 		os.Exit(0)
 	},

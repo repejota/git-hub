@@ -19,7 +19,9 @@ package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
+	"os"
 
 	ghub "github.com/repejota/git-hub"
 	"github.com/repejota/git-hub/automation"
@@ -33,6 +35,17 @@ var ReleaseStartCmd = &cobra.Command{
 	Long:  `Start working on an release`,
 	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
+		log.SetFlags(0)
+
+		// by default logging is off
+		log.SetOutput(ioutil.Discard)
+
+		// --verbose
+		// enable logging if verbose mode
+		if VerboseFlag {
+			log.SetOutput(os.Stdout)
+		}
+
 		path := "."
 
 		// Open repository
