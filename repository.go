@@ -46,6 +46,12 @@ func OpenRepository(path string) (*Repository, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	err = repository.GetRemoteGithubRepository("origin")
+	if err != nil {
+		return nil, err
+	}
+
 	return repository, nil
 }
 

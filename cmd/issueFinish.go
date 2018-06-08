@@ -19,29 +19,17 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 
-	"github.com/repejota/git-hub"
 	"github.com/spf13/cobra"
 )
 
-// InfoCmd represents the info command
-var InfoCmd = &cobra.Command{
-	Use:   "info",
-	Short: "Get information about the repository",
-	Long:  `Get information about the repository and its github project`,
-	Args:  cobra.MinimumNArgs(0),
+// IssueFinishCmd represents the issue finish command
+var IssueFinishCmd = &cobra.Command{
+	Use:   "finish",
+	Short: "Finish an issue",
+	Long:  `Finish working on an issue`,
+	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
-		// Open repository
-		repository, err := ghub.OpenRepository(".")
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		// Print info
-		fmt.Printf("Git Repository Path: %s\n", ".")
-		fmt.Printf("GitHub Repository ID: %d\n", repository.GitHubRepository.ID)
-		fmt.Printf("GitHub Repository Full Name: %s\n", *repository.GitHubRepository.FullName)
-		fmt.Printf("GitHub Repository HTML URL: %s\n", *repository.GitHubRepository.HTMLURL)
+		fmt.Println("git hub issue finish")
 	},
 }
