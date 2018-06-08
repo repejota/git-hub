@@ -18,18 +18,18 @@
 package cmd
 
 import (
-	"os"
+	"fmt"
 
 	"github.com/spf13/cobra"
 )
 
-// ReleaseCmd represents the release command
-var ReleaseCmd = &cobra.Command{
-	Use:   "release",
-	Short: "Get information releases",
-	Long:  `Get information about the repository releases`,
+// ReleaseListCmd represents the release list command
+var ReleaseListCmd = &cobra.Command{
+	Use:   "list",
+	Short: "List releases",
+	Long:  `List releases`,
+	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Usage()
-		os.Exit(0)
+		fmt.Println("git hub release list")
 	},
 }
