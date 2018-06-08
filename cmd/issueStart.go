@@ -46,7 +46,7 @@ var IssueStartCmd = &cobra.Command{
 		log.Printf("Start working on the issue #%d\n", issueID)
 
 		// Open repository
-		repository, err := ghub.OpenRepository(".")
+		r, err := ghub.OpenRepository(".")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -57,8 +57,14 @@ var IssueStartCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
+		// --repository flag
+		repository := *r.GitHubRepository.FullName
+		if Repository != "" {
+			repository = Repository
+		}
+
 		// Get Issue
-		org, repo := ghub.ParseRepositoryFullName(*repository.GitHubRepository.FullName)
+		org, repo := ghub.ParseRepositoryFullName(repository)
 		issue, err := ghub.GetIssue(org, repo, issueID)
 		if err != nil {
 			log.Fatal(err)
@@ -78,7 +84,10 @@ var IssueStartCmd = &cobra.Command{
 		log.Println("Assigned issue to", user.GetLogin())
 
 		// Create local issue branch
-		issueBranchName := fmt.Sprintf("issue/%s", ghub.SlugifyIssue(issue))
+		issueBranchName := fmt.Sprintf("issue/%s-%s", ghub.SlugifyRepository(repository), ghub.SlugifyIssue(issue))
+		if Repository != "" {
+			issueBranchName = fmt.Sprintf("issue/%s", ghub.SlugifyIssue(issue))
+		}
 		out, err := automation.CreateLocalGitBranch(issueBranchName)
 		if err != nil {
 			log.Fatal(err)
@@ -93,4 +102,8 @@ var IssueStartCmd = &cobra.Command{
 		}
 		log.Println(out)
 	},
+}
+
+func init() {
+	IssueStartCmd.Flags().StringVarP(&Repository, "repository", "r", "", "Repository to get the issues from")
 }

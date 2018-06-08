@@ -92,3 +92,10 @@ func SlugifyIssue(issue *github.Issue) string {
 	slugIssue := fmt.Sprintf("%d-%s", issue.GetNumber(), slugifyTitle)
 	return slugIssue
 }
+
+// SlugifyRepository ...
+func SlugifyRepository(repositoryFullName string) string {
+	var re = regexp.MustCompile("[^a-z0-9]+")
+	slugifyRepo := strings.Trim(re.ReplaceAllString(strings.ToLower(repositoryFullName), "-"), "-")
+	return slugifyRepo
+}
