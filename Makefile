@@ -84,7 +84,7 @@ godoc-serve:		## Serve documentation (godoc format) for this package at port HTT
 # Distribution
 
 dist: dist-linux dist-darwin dist-windows
-dist:				## Generate distribution packages
+dist:			## Generate distribution packages
 
 dist-linux:
 	GOOS=linux GOARCH=amd64 go build ${LDFLAGS} -o ${BINARY}-${VERSION}-linux-amd64
