@@ -58,13 +58,15 @@ var IssueStartCmd = &cobra.Command{
 
 		// An issue id is required
 		if len(args) == 0 {
-			log.Fatalf("An issue ID is required")
+			fmt.Println(color.RedString("ERROR: %s", "An issue ID is required"))
+			os.Exit(1)
 		}
 
 		// It should be an integer
 		issueID, err := strconv.Atoi(args[0])
 		if err != nil {
-			log.Fatalf("Invalid issue ID")
+			fmt.Println(color.RedString("ERROR: %s %q", "Invalid issue ID", args[0]))
+			os.Exit(1)
 		}
 
 		// Open repository
@@ -84,7 +86,8 @@ var IssueStartCmd = &cobra.Command{
 		// Get User
 		user, err := ghub.GetAuthenticatedUser()
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println(color.RedString("ERROR: %s", err.Error()))
+			os.Exit(1)
 		}
 
 		// Get Issue
@@ -104,9 +107,10 @@ var IssueStartCmd = &cobra.Command{
 		// Assign User to the Issue
 		err = ghub.AssignUserToIssue(org, repo, user, issue)
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println(color.RedString("ERROR: %s", err.Error()))
+			os.Exit(1)
 		}
-		log.Println("Assigned issue to", user.GetLogin())
+		fmt.Println("Assigned issue to", user.GetLogin())
 
 		// Create local issue branch
 		issueBranchName := fmt.Sprintf("issue/%s", ghub.SlugifyIssue(issue))
@@ -116,17 +120,18 @@ var IssueStartCmd = &cobra.Command{
 
 		out, err := automation.CreateLocalGitBranch(issueBranchName)
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println(color.RedString("ERROR: %s", err.Error()))
+			os.Exit(1)
 		}
-		log.Println("Created local branch", issueBranchName)
-		log.Println(out)
+		fmt.Println("Creating local branch", issueBranchName)
+		fmt.Println(out)
 
 		// Push local release branch to origin
 		out, err = automation.PushLocalBranchToOrigin(issueBranchName)
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Println(out)
+		fmt.Println(out)
 	},
 }
 
