@@ -28,6 +28,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Repository ...
+var Repository string
+
 // IssueCmd represents the issue command
 var IssueCmd = &cobra.Command{
 	Use:   "issue",
@@ -47,17 +50,24 @@ var IssueListCmd = &cobra.Command{
 	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Open repository
-		repository, err := ghub.OpenRepository(".")
+		repo, err := ghub.OpenRepository(".")
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		err = repository.GetRemoteGithubRepository("origin")
+		err = repo.GetRemoteGithubRepository("origin")
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		issues, err := ghub.ListIssuesByRepo(*repository.GitHubRepository.FullName)
+		// --repository flag
+		repository := *repo.GitHubRepository.FullName
+		if Repository != "" {
+			repository = Repository
+		}
+
+		// List issues by repo
+		issues, err := ghub.ListIssuesByRepo(repository)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -151,4 +161,8 @@ var IssueFinishCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("git hub issue finish")
 	},
+}
+
+func init() {
+	IssueListCmd.Flags().StringVarP(&Repository, "repository", "r", "", "Repository to get the issues from")
 }
