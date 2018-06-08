@@ -53,7 +53,6 @@ var ReleaseFinishCmd = &cobra.Command{
 		if GitHubToken != "" {
 			gitHubToken = GitHubToken
 		}
-
 		log.Println(color.YellowString("GitHub Token: %s", gitHubToken))
 
 		// Open repository
@@ -63,7 +62,6 @@ var ReleaseFinishCmd = &cobra.Command{
 			fmt.Println(color.RedString("ERROR: %s", err.Error()))
 			os.Exit(1)
 		}
-		log.Printf("Open repository at %q successfully\n", path)
 
 		// Get current branch (release branch)
 		releaseBranchName, err := automation.GetCurrentBranch()

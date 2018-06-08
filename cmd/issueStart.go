@@ -54,7 +54,6 @@ var IssueStartCmd = &cobra.Command{
 		if GitHubToken != "" {
 			gitHubToken = GitHubToken
 		}
-
 		log.Println(color.YellowString("GitHub Token: %s", gitHubToken))
 
 		// An issue id is required

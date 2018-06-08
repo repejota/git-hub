@@ -52,7 +52,6 @@ var IssueListCmd = &cobra.Command{
 		if GitHubToken != "" {
 			gitHubToken = GitHubToken
 		}
-
 		log.Println(color.YellowString("GitHub Token: %s", gitHubToken))
 
 		// Open repository

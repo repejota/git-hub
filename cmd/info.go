@@ -61,7 +61,6 @@ var InfoCmd = &cobra.Command{
 			fmt.Println(color.RedString("ERROR: %s", err.Error()))
 			os.Exit(1)
 		}
-		log.Println("GitHub Token", GitHubToken)
 
 		// Print info
 		fmt.Printf("Git Repository Path: %s\n", ".")
