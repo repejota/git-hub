@@ -18,10 +18,12 @@
 package cmd
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 
+	"github.com/fatih/color"
 	ghub "github.com/repejota/git-hub"
 	"github.com/repejota/git-hub/automation"
 	"github.com/spf13/cobra"
@@ -45,14 +47,21 @@ var ReleaseFinishCmd = &cobra.Command{
 			log.SetOutput(os.Stdout)
 		}
 
-		path := "."
+		// --github-token
+		// Get the GitHub Token from env or from flag
+		gitHubToken := os.Getenv("GITHUB_TOKEN")
+		if GitHubToken != "" {
+			gitHubToken = GitHubToken
+		}
+		log.Println(color.YellowString("GitHub Token: %s", gitHubToken))
 
 		// Open repository
-		repository, err := ghub.OpenRepository(path)
+		path := "."
+		repository, err := ghub.OpenRepository(path, gitHubToken)
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println(color.RedString("ERROR: %s", err.Error()))
+			os.Exit(1)
 		}
-		log.Printf("Open repository at %q successfully\n", path)
 
 		// Get current branch (release branch)
 		releaseBranchName, err := automation.GetCurrentBranch()

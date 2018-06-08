@@ -22,6 +22,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -44,6 +45,14 @@ var IssueCmd = &cobra.Command{
 		if VerboseFlag {
 			log.SetOutput(os.Stdout)
 		}
+
+		// --github-token
+		// Get the GitHub Token from env or from flag
+		gitHubToken := os.Getenv("GITHUB_TOKEN")
+		if GitHubToken != "" {
+			gitHubToken = GitHubToken
+		}
+		log.Println(color.YellowString("GitHub Token: %s", gitHubToken))
 
 		cmd.Usage()
 		os.Exit(0)
