@@ -12,3 +12,7 @@
 *.out
 
 install.sh
+
+# Distribution binaries and packages
+git-hub-*-*-*.zip
+git-hub-*-*-*
