@@ -25,7 +25,6 @@ import (
 	"log"
 	"strings"
 
-	"github.com/fatih/color"
 	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
 	git "gopkg.in/src-d/go-git.v4"
@@ -55,7 +54,7 @@ func OpenRepository(path string, gitHubToken string) (*Repository, error) {
 		return nil, err
 	}
 
-	log.Println(color.YellowString("Opened repository at %q", path))
+	log.Printf("Opened repository at %q", path)
 
 	return repository, nil
 }
