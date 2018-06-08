@@ -28,6 +28,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// GitHubToken ...
+var GitHubToken string
+
 // InfoCmd represents the info command
 var InfoCmd = &cobra.Command{
 	Use:   "info",
@@ -52,6 +55,7 @@ var InfoCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
+		log.Println("GitHub Token", GitHubToken)
 
 		log.Println(color.YellowString("Opened repository at %q", path))
 
@@ -61,4 +65,8 @@ var InfoCmd = &cobra.Command{
 		fmt.Printf("GitHub Repository Full Name: %s\n", *repository.GitHubRepository.FullName)
 		fmt.Printf("GitHub Repository HTML URL: %s\n", *repository.GitHubRepository.HTMLURL)
 	},
+}
+
+func init() {
+	InfoCmd.Flags().StringVarP(&GitHubToken, "github-token", "", "", "Github Token")
 }
