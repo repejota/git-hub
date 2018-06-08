@@ -71,8 +71,9 @@ dev-deps:		## Install dev and build dependencies
 .PHONY: clean
 clean:			## Delete generated development environment
 	go clean
-	rm -rf ${BINARY}
-	rm -rf ${BINARY}.exe
+	rm -rf ${BINARY}-*-*
+	rm -rf ${BINARY}-*-*.exe
+	rm -rf ${BINARY}-*-*.zip
 	rm -rf coverage-all.out
 
 # Docs
