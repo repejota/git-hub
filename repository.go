@@ -136,7 +136,7 @@ func ParseGithubURL(url string) (string, string, string, error) {
 	// git@github.com:repejota/git-hub.git
 	parts := strings.Split(url, ":")
 	host := strings.Split(parts[0], "@")[1]
-	fullName := strings.Split(parts[1], ".")[0]
+	fullName := strings.TrimSuffix(parts[1], ".git")
 	organization, repository := ParseRepositoryFullName(fullName)
 	return host, organization, repository, nil
 }

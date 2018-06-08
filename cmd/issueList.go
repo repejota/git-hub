@@ -33,9 +33,10 @@ var IssueListCmd = &cobra.Command{
 	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Open repository
-		repo, err := ghub.OpenRepository(".")
+		path := "."
+		repo, err := ghub.OpenRepository(path)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatalf("ERROR: can't open repository at %q: %v", path, err)
 		}
 
 		// --repository flag

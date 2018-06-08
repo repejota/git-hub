@@ -35,21 +35,30 @@ var IssueStartCmd = &cobra.Command{
 	Long:  `Start working on an issue`,
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-
+		// An issue id is required
 		if len(args) == 0 {
 			log.Fatalf("An issue ID is required")
 		}
+
+		// It should be an integer
 		issueID, err := strconv.Atoi(args[0])
 		if err != nil {
 			log.Fatalf("Invalid issue ID")
 		}
-		log.Printf("Start working on the issue #%d\n", issueID)
 
 		// Open repository
-		repository, err := ghub.OpenRepository(".")
+		r, err := ghub.OpenRepository(".")
 		if err != nil {
 			log.Fatal(err)
 		}
+
+		// --repository flag
+		repository := *r.GitHubRepository.FullName
+		if Repository != "" {
+			repository = Repository
+		}
+
+		log.Printf("Start working on the issue %s#%d\n", repository, issueID)
 
 		// Get User
 		user, err := ghub.GetAuthenticatedUser()
@@ -58,7 +67,7 @@ var IssueStartCmd = &cobra.Command{
 		}
 
 		// Get Issue
-		org, repo := ghub.ParseRepositoryFullName(*repository.GitHubRepository.FullName)
+		org, repo := ghub.ParseRepositoryFullName(repository)
 		issue, err := ghub.GetIssue(org, repo, issueID)
 		if err != nil {
 			log.Fatal(err)
@@ -79,6 +88,10 @@ var IssueStartCmd = &cobra.Command{
 
 		// Create local issue branch
 		issueBranchName := fmt.Sprintf("issue/%s", ghub.SlugifyIssue(issue))
+		if Repository != "" {
+			issueBranchName = fmt.Sprintf("issue/%s-%s", ghub.SlugifyRepository(repository), ghub.SlugifyIssue(issue))
+		}
+
 		out, err := automation.CreateLocalGitBranch(issueBranchName)
 		if err != nil {
 			log.Fatal(err)
@@ -93,4 +106,8 @@ var IssueStartCmd = &cobra.Command{
 		}
 		log.Println(out)
 	},
+}
+
+func init() {
+	IssueStartCmd.Flags().StringVarP(&Repository, "repository", "r", "", "Repository to get the issues from")
 }
