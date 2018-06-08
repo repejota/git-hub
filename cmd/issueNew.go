@@ -18,7 +18,9 @@
 package cmd
 
 import (
+	"io/ioutil"
 	"log"
+	"os"
 
 	"github.com/repejota/git-hub/automation"
 
@@ -33,6 +35,17 @@ var IssueNewCmd = &cobra.Command{
 	Long:  `Create an issue`,
 	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
+		log.SetFlags(0)
+
+		// by default logging is off
+		log.SetOutput(ioutil.Discard)
+
+		// --verbose
+		// enable logging if verbose mode
+		if VerboseFlag {
+			log.SetOutput(os.Stdout)
+		}
+
 		// Open repository
 		repo, err := ghub.OpenRepository(".")
 		if err != nil {

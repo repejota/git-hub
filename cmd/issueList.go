@@ -19,7 +19,9 @@ package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
+	"os"
 
 	ghub "github.com/repejota/git-hub"
 	"github.com/spf13/cobra"
@@ -32,6 +34,17 @@ var IssueListCmd = &cobra.Command{
 	Long:  `List repository issues`,
 	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
+		log.SetFlags(0)
+
+		// by default logging is off
+		log.SetOutput(ioutil.Discard)
+
+		// --verbose
+		// enable logging if verbose mode
+		if VerboseFlag {
+			log.SetOutput(os.Stdout)
+		}
+
 		// Open repository
 		path := "."
 		repo, err := ghub.OpenRepository(path)

@@ -19,8 +19,11 @@ package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
+	"os"
 
+	"github.com/fatih/color"
 	"github.com/repejota/git-hub"
 	"github.com/spf13/cobra"
 )
@@ -32,11 +35,25 @@ var InfoCmd = &cobra.Command{
 	Long:  `Get information about the repository and its github project`,
 	Args:  cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
+		log.SetFlags(0)
+
+		// by default logging is off
+		log.SetOutput(ioutil.Discard)
+
+		// --verbose
+		// enable logging if verbose mode
+		if VerboseFlag {
+			log.SetOutput(os.Stdout)
+		}
+
 		// Open repository
+		path := "."
 		repository, err := ghub.OpenRepository(".")
 		if err != nil {
 			log.Fatal(err)
 		}
+
+		log.Println(color.YellowString("Opened repository at %q", path))
 
 		// Print info
 		fmt.Printf("Git Repository Path: %s\n", ".")
