@@ -49,6 +49,8 @@ var IssueListCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
+
+		// Render issues by repo
 		for _, issue := range issues {
 			fmt.Printf("#%d - %s - %s\n", *issue.Number, *issue.Title, *issue.HTMLURL)
 		}

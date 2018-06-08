@@ -20,6 +20,7 @@ package ghub
 import (
 	"context"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -53,6 +54,12 @@ func OpenRepository(path string) (*Repository, error) {
 	}
 
 	return repository, nil
+}
+
+// GetNewIssueURL ...
+func (r *Repository) GetNewIssueURL() string {
+	url := fmt.Sprintf("https://github.com/%s/issues/new", *r.GitHubRepository.FullName)
+	return url
 }
 
 // Git ...
