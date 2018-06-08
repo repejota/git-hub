@@ -22,7 +22,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -49,7 +48,7 @@ var ReleaseCmd = &cobra.Command{
 		if GitHubToken != "" {
 			gitHubToken = GitHubToken
 		}
-		log.Println(color.YellowString("GitHub Token: %s", gitHubToken))
+		log.Printf("GitHub Token: %s\n", gitHubToken)
 
 		cmd.Usage()
 		os.Exit(0)

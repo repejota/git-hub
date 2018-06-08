@@ -53,7 +53,7 @@ var ReleaseStartCmd = &cobra.Command{
 		if GitHubToken != "" {
 			gitHubToken = GitHubToken
 		}
-		log.Println(color.YellowString("GitHub Token: %s", gitHubToken))
+		log.Printf("GitHub Token: %s\n", gitHubToken)
 
 		// Open repository
 		path := "."
