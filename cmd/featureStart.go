@@ -31,9 +31,9 @@ import (
 
 // FeatureStartCmd represents the feature start command
 var FeatureStartCmd = &cobra.Command{
-	Use:   "start [issue number]",
-	Short: "Start an issue",
-	Long:  `Start working on an issue`,
+	Use:   "start [feature title]",
+	Short: "Start a feature",
+	Long:  `Start working on a feature`,
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		log.SetFlags(0)
@@ -71,7 +71,7 @@ var FeatureStartCmd = &cobra.Command{
 		}
 
 		// Create local issue branch
-		featureBranchName := fmt.Sprintf("issue/%s", ghub.Slugify(featureTitle))
+		featureBranchName := fmt.Sprintf("feature/%s", ghub.Slugify(featureTitle))
 
 		out, err := automation.CreateLocalGitBranch(featureBranchName)
 		if err != nil {
