@@ -15,38 +15,43 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 
-package main
+package cmd
 
 import (
-	ghub "github.com/repejota/git-hub"
-	"github.com/repejota/git-hub/cmd"
+	"io/ioutil"
+	"log"
+	"os"
+
+	"github.com/fatih/color"
+	"github.com/spf13/cobra"
 )
 
-var (
-	// Version is the current version number
-	Version string
-	// Build is the current build id
-	Build string
-)
+// FeatureCmd represents the feature command
+var FeatureCmd = &cobra.Command{
+	Use:   "feature",
+	Short: "Get information features",
+	Long:  `Get information about the repository features`,
+	Run: func(cmd *cobra.Command, args []string) {
+		log.SetFlags(0)
 
-func main() {
-	cmd.RootCmd.SetVersionTemplate(`{{with .Name}}{{printf "%s " .}}{{end}}{{printf "%s" .Version}}`)
-	cmd.RootCmd.Version = ghub.ShowVersionInfo(Version, Build)
+		// by default logging is off
+		log.SetOutput(ioutil.Discard)
 
-	cmd.RootCmd.AddCommand(cmd.InfoCmd)
+		// --verbose
+		// enable logging if verbose mode
+		if VerboseFlag {
+			log.SetOutput(os.Stdout)
+		}
 
-	cmd.IssueCmd.AddCommand(cmd.IssueListCmd)
-	cmd.IssueCmd.AddCommand(cmd.IssueStartCmd)
-	cmd.IssueCmd.AddCommand(cmd.IssueNewCmd)
-	cmd.RootCmd.AddCommand(cmd.IssueCmd)
+		// --github-token
+		// Get the GitHub Token from env or from flag
+		gitHubToken := os.Getenv("GITHUB_TOKEN")
+		if GitHubToken != "" {
+			gitHubToken = GitHubToken
+		}
+		log.Println(color.YellowString("GitHub Token: %s", gitHubToken))
 
-	cmd.RootCmd.AddCommand(cmd.FeatureCmd)
-
-	cmd.ReleaseCmd.AddCommand(cmd.ReleaseStartCmd)
-	cmd.ReleaseCmd.AddCommand(cmd.ReleaseFinishCmd)
-	cmd.RootCmd.AddCommand(cmd.ReleaseCmd)
-
-	cmd.RootCmd.AddCommand(cmd.VersionCmd)
-
-	cmd.Execute()
+		cmd.Usage()
+		os.Exit(0)
+	},
 }
