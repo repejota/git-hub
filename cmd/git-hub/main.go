@@ -40,6 +40,7 @@ func main() {
 	cmd.IssueCmd.AddCommand(cmd.IssueNewCmd)
 	cmd.RootCmd.AddCommand(cmd.IssueCmd)
 
+	cmd.FeatureCmd.AddCommand(cmd.FeatureStartCmd)
 	cmd.RootCmd.AddCommand(cmd.FeatureCmd)
 
 	cmd.ReleaseCmd.AddCommand(cmd.ReleaseStartCmd)
