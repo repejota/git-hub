@@ -85,13 +85,6 @@ func AssignUserToIssue(organization string, repository string, user *github.User
 	return nil
 }
 
-// Slugify ...
-func Slugify(str string) string {
-	var re = regexp.MustCompile("[^a-z0-9]+")
-	slugifyString := strings.Trim(re.ReplaceAllString(strings.ToLower(str), "-"), "-")
-	return slugifyString
-}
-
 // SlugifyIssue ...
 func SlugifyIssue(issue *github.Issue) string {
 	var re = regexp.MustCompile("[^a-z0-9]+")
