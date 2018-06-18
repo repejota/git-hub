@@ -29,8 +29,8 @@ import (
 // FeatureCmd represents the feature command
 var FeatureCmd = &cobra.Command{
 	Use:   "feature",
-	Short: "Get information features",
-	Long:  `Get information about the repository features`,
+	Short: "Manage features",
+	Long:  `Manage repository and Github features`,
 	Run: func(cmd *cobra.Command, args []string) {
 		log.SetFlags(0)
 

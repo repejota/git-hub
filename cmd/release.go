@@ -28,8 +28,8 @@ import (
 // ReleaseCmd represents the release command
 var ReleaseCmd = &cobra.Command{
 	Use:   "release",
-	Short: "Get information releases",
-	Long:  `Get information about the repository releases`,
+	Short: "Manage releases",
+	Long:  `Manage repository and Github releases`,
 	Run: func(cmd *cobra.Command, args []string) {
 		log.SetFlags(0)
 

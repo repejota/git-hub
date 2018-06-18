@@ -31,8 +31,8 @@ import (
 // InfoCmd represents the info command
 var InfoCmd = &cobra.Command{
 	Use:   "info",
-	Short: "Get information about the repository",
-	Long:  `Get information about the repository and its github project`,
+	Short: "Get information",
+	Long:  `Get information about a repository and its Github project`,
 	Args:  cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
 		log.SetFlags(0)
@@ -63,7 +63,7 @@ var InfoCmd = &cobra.Command{
 		}
 
 		// Print info
-		fmt.Printf("Git Repository Path: %s\n", ".")
+		fmt.Printf("Git Repository Path: %s\n", path)
 		fmt.Printf("GitHub Repository ID: %d\n", repository.GitHubRepository.ID)
 		fmt.Printf("GitHub Repository Full Name: %s\n", *repository.GitHubRepository.FullName)
 		fmt.Printf("GitHub Repository HTML URL: %s\n", *repository.GitHubRepository.HTMLURL)

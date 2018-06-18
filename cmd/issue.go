@@ -32,8 +32,8 @@ var Repository string
 // IssueCmd represents the issue command
 var IssueCmd = &cobra.Command{
 	Use:   "issue",
-	Short: "Get information issues",
-	Long:  `Get information about the repository issues`,
+	Short: "Manage issues",
+	Long:  `Manage repository and Github issues`,
 	Run: func(cmd *cobra.Command, args []string) {
 		log.SetFlags(0)
 
