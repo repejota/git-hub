@@ -68,39 +68,39 @@ var ReleaseFinishCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Println("Finishing release", releaseBranchName)
+		fmt.Println("Finishing release", releaseBranchName)
 
 		// Go to master branch
 		out, err := automation.GoGitBranch("master")
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Println("Checking out master branch")
-		log.Println(out)
+		fmt.Println("Checking out master branch")
+		fmt.Println(out)
 
 		// Pull and rebase
 		out, err = automation.PullAndRebase()
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Println("Pull and rebase master branch")
-		log.Println(out)
+		fmt.Println("Pull and rebase master branch")
+		fmt.Println(out)
 
 		// Merge release branch into master
 		out, err = automation.MergeBranch(releaseBranchName)
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Printf("Merging %s branch into master\n", releaseBranchName)
-		log.Println(out)
+		fmt.Printf("Merging %s branch into master\n", releaseBranchName)
+		fmt.Println(out)
 
 		// Push changes
 		out, err = automation.GitPush()
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Println("Pushing merge changes into master")
-		log.Println(out)
+		fmt.Println("Pushing merge changes into master")
+		fmt.Println(out)
 
 		// Create a new version Tag
 		currentVersion, err := repository.GetCurrentVersion()
@@ -111,31 +111,31 @@ var ReleaseFinishCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Println("Creating a local tag", currentVersion)
-		log.Println(out)
+		fmt.Println("Creating a local tag", currentVersion)
+		fmt.Println(out)
 
 		// Push tags
 		out, err = automation.GitPushTags()
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Println("Pushing tag", currentVersion)
-		log.Println(out)
+		fmt.Println("Pushing tag", currentVersion)
+		fmt.Println(out)
 
 		// Delete remote release branch
 		out, err = automation.DeleteRemoteBranch(releaseBranchName)
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Println("Deleting remote branch", releaseBranchName)
-		log.Println(out)
+		fmt.Println("Deleting remote branch", releaseBranchName)
+		fmt.Println(out)
 
 		// Delete local release branch
 		out, err = automation.DeleteLocalBranch(releaseBranchName)
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Println("Deleting local branch", releaseBranchName)
-		log.Println(out)
+		fmt.Println("Deleting local branch", releaseBranchName)
+		fmt.Println(out)
 	},
 }

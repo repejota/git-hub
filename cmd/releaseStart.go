@@ -71,22 +71,22 @@ var ReleaseStartCmd = &cobra.Command{
 		if currentBranch != "master" {
 			log.Fatalf("Releases must start from 'master' branch and you are on branch %q", currentBranch)
 		}
-		log.Printf("You are on %q branch\n", currentBranch)
+		fmt.Printf("You are on %q branch\n", currentBranch)
 
 		// Pull the latest changes from origin master
-		log.Printf("Pulling latest changes from origin master\n")
+		fmt.Printf("Pulling latest changes from origin master\n")
 		out, err := automation.PullMasterBranch()
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Println(out)
+		fmt.Println(out)
 
 		// Calculate new version
 		nextVersion, err := repository.NextVersion()
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Println("Next version is:", nextVersion)
+		fmt.Println("Next version is:", nextVersion)
 
 		// Create local release branch
 		releaseBranchName := fmt.Sprintf("release/%s", nextVersion)
@@ -94,21 +94,21 @@ var ReleaseStartCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Printf("Created local branch: %s\n", releaseBranchName)
-		log.Println(out)
+		fmt.Printf("Created local branch: %s\n", releaseBranchName)
+		fmt.Println(out)
 
 		// Push local release branch to origin
 		out, err = automation.PushLocalBranchToOrigin(releaseBranchName)
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Println(out)
+		fmt.Println(out)
 
 		// Bump nextVersion
 		out, err = automation.BumpNextVersion(nextVersion.String())
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Println(out)
+		fmt.Println(out)
 	},
 }
