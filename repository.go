@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"regexp"
 	"strings"
 
 	"github.com/google/go-github/github"
@@ -152,4 +153,11 @@ func ParseRepositoryFullName(fullName string) (string, string) {
 	organization := parts[0]
 	repository := parts[1]
 	return organization, repository
+}
+
+// SlugifyRepository ...
+func SlugifyRepository(repositoryFullName string) string {
+	var re = regexp.MustCompile("[^a-z0-9]+")
+	slugifyRepo := strings.Trim(re.ReplaceAllString(strings.ToLower(repositoryFullName), "-"), "-")
+	return slugifyRepo
 }
