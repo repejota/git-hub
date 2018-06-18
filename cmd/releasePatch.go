@@ -26,11 +26,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// ReleaseStartCmd represents the release start command
-var ReleaseStartCmd = &cobra.Command{
-	Use:   "start",
-	Short: "Start a release",
-	Long:  `Start working on an release`,
+// ReleasePatchCmd represents the release start command
+var ReleasePatchCmd = &cobra.Command{
+	Use:   "patch",
+	Short: "Release a patch",
+	Long:  `Release a new version and bump only patch version`,
 	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 		log.SetFlags(0)
@@ -55,5 +55,6 @@ var ReleaseStartCmd = &cobra.Command{
 		path := "."
 
 		ghub.ReleaseStart(path, gitHubToken)
+		ghub.ReleaseFinish(path, gitHubToken)
 	},
 }
