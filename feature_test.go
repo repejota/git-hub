@@ -15,45 +15,4 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 
-package cmd
-
-import (
-	"io/ioutil"
-	"log"
-	"os"
-
-	ghub "github.com/repejota/git-hub"
-	"github.com/spf13/cobra"
-)
-
-// ReleaseFinishCmd represents the release finish command
-var ReleaseFinishCmd = &cobra.Command{
-	Use:   "finish",
-	Short: "Finish a release",
-	Long:  `Finish and publish a release`,
-	Args:  cobra.NoArgs,
-	Run: func(cmd *cobra.Command, args []string) {
-		log.SetFlags(0)
-
-		// by default logging is off
-		log.SetOutput(ioutil.Discard)
-
-		// --verbose
-		// enable logging if verbose mode
-		if VerboseFlag {
-			log.SetOutput(os.Stdout)
-		}
-
-		// --github-token
-		// Get the GitHub Token from env or from flag
-		gitHubToken := os.Getenv("GITHUB_TOKEN")
-		if GitHubToken != "" {
-			gitHubToken = GitHubToken
-		}
-		log.Printf("GitHub Token: %s\n", gitHubToken)
-
-		repositoryPath := "."
-
-		ghub.ReleaseFinish(repositoryPath, gitHubToken)
-	},
-}
+package ghub_test

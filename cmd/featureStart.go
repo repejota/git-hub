@@ -24,8 +24,7 @@ import (
 	"os"
 
 	"github.com/fatih/color"
-	ghub "github.com/repejota/git-hub"
-	"github.com/repejota/git-hub/automation"
+	"github.com/repejota/git-hub"
 	"github.com/spf13/cobra"
 )
 
@@ -62,30 +61,8 @@ var FeatureStartCmd = &cobra.Command{
 		}
 		featureTitle := args[0]
 
-		// Open repository
-		path := "."
-		_, err := ghub.OpenRepository(path, gitHubToken)
-		if err != nil {
-			fmt.Println(color.RedString("ERROR: %s", err.Error()))
-			os.Exit(1)
-		}
+		repositoryPath := "."
 
-		// Create local issue branch
-		featureBranchName := fmt.Sprintf("feature/%s", ghub.Slugify(featureTitle))
-
-		out, err := automation.CreateLocalGitBranch(featureBranchName)
-		if err != nil {
-			fmt.Println(color.RedString("ERROR: %s", err.Error()))
-			os.Exit(1)
-		}
-		fmt.Println("Creating local branch", featureBranchName)
-		fmt.Println(out)
-
-		// Push local release branch to origin
-		out, err = automation.PushLocalBranchToOrigin(featureBranchName)
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println(out)
+		ghub.FeatureStart(repositoryPath, gitHubToken, featureTitle)
 	},
 }

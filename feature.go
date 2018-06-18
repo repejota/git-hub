@@ -15,46 +15,41 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 
-package cmd
+package ghub
 
 import (
-	"io/ioutil"
+	"fmt"
 	"log"
 	"os"
 
-	ghub "github.com/repejota/git-hub"
-	"github.com/spf13/cobra"
+	"github.com/fatih/color"
+	"github.com/repejota/git-hub/automation"
 )
 
-// ReleasePatchCmd represents the release start command
-var ReleasePatchCmd = &cobra.Command{
-	Use:   "patch",
-	Short: "Do a patch release",
-	Long:  `Do a new relese only bumping the patch semver part`,
-	Args:  cobra.NoArgs,
-	Run: func(cmd *cobra.Command, args []string) {
-		log.SetFlags(0)
+// FeatureStart ...
+func FeatureStart(repositoryPath string, gitHubToken string, featureTitle string) {
+	// Open repository
+	_, err := OpenRepository(repositoryPath, gitHubToken)
+	if err != nil {
+		fmt.Println(color.RedString("ERROR: %s", err.Error()))
+		os.Exit(1)
+	}
 
-		// by default logging is off
-		log.SetOutput(ioutil.Discard)
+	// Create local issue branch
+	featureBranchName := fmt.Sprintf("feature/%s", Slugify(featureTitle))
 
-		// --verbose
-		// enable logging if verbose mode
-		if VerboseFlag {
-			log.SetOutput(os.Stdout)
-		}
+	out, err := automation.CreateLocalGitBranch(featureBranchName)
+	if err != nil {
+		fmt.Println(color.RedString("ERROR: %s", err.Error()))
+		os.Exit(1)
+	}
+	fmt.Println("Creating local branch", featureBranchName)
+	fmt.Println(out)
 
-		// --github-token
-		// Get the GitHub Token from env or from flag
-		gitHubToken := os.Getenv("GITHUB_TOKEN")
-		if GitHubToken != "" {
-			gitHubToken = GitHubToken
-		}
-		log.Printf("GitHub Token: %s\n", gitHubToken)
-
-		repositoryPath := "."
-
-		ghub.ReleaseStart(repositoryPath, gitHubToken)
-		ghub.ReleaseFinish(repositoryPath, gitHubToken)
-	},
+	// Push local release branch to origin
+	out, err = automation.PushLocalBranchToOrigin(featureBranchName)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(out)
 }

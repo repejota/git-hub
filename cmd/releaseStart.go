@@ -52,8 +52,8 @@ var ReleaseStartCmd = &cobra.Command{
 		}
 		log.Printf("GitHub Token: %s\n", gitHubToken)
 
-		path := "."
+		repositoryPath := "."
 
-		ghub.ReleaseStart(path, gitHubToken)
+		ghub.ReleaseStart(repositoryPath, gitHubToken)
 	},
 }
