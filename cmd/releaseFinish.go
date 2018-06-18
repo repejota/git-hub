@@ -18,14 +18,11 @@
 package cmd
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 
-	"github.com/fatih/color"
 	ghub "github.com/repejota/git-hub"
-	"github.com/repejota/git-hub/automation"
 	"github.com/spf13/cobra"
 )
 
@@ -55,87 +52,8 @@ var ReleaseFinishCmd = &cobra.Command{
 		}
 		log.Printf("GitHub Token: %s\n", gitHubToken)
 
-		// Open repository
 		path := "."
-		repository, err := ghub.OpenRepository(path, gitHubToken)
-		if err != nil {
-			fmt.Println(color.RedString("ERROR: %s", err.Error()))
-			os.Exit(1)
-		}
 
-		// Get current branch (release branch)
-		releaseBranchName, err := automation.GetCurrentBranch()
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println("Finishing release", releaseBranchName)
-
-		// Go to master branch
-		out, err := automation.GoGitBranch("master")
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println("Checking out master branch")
-		fmt.Println(out)
-
-		// Pull and rebase
-		out, err = automation.PullAndRebase()
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println("Pull and rebase master branch")
-		fmt.Println(out)
-
-		// Merge release branch into master
-		out, err = automation.MergeBranch(releaseBranchName)
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Printf("Merging %s branch into master\n", releaseBranchName)
-		fmt.Println(out)
-
-		// Push changes
-		out, err = automation.GitPush()
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println("Pushing merge changes into master")
-		fmt.Println(out)
-
-		// Create a new version Tag
-		currentVersion, err := repository.GetCurrentVersion()
-		if err != nil {
-			log.Fatal(err)
-		}
-		out, err = automation.CreateGitTag(currentVersion.String())
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println("Creating a local tag", currentVersion)
-		fmt.Println(out)
-
-		// Push tags
-		out, err = automation.GitPushTags()
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println("Pushing tag", currentVersion)
-		fmt.Println(out)
-
-		// Delete remote release branch
-		out, err = automation.DeleteRemoteBranch(releaseBranchName)
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println("Deleting remote branch", releaseBranchName)
-		fmt.Println(out)
-
-		// Delete local release branch
-		out, err = automation.DeleteLocalBranch(releaseBranchName)
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println("Deleting local branch", releaseBranchName)
-		fmt.Println(out)
+		ghub.ReleaseFinish(path, gitHubToken)
 	},
 }
