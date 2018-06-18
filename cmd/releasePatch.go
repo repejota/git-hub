@@ -29,8 +29,8 @@ import (
 // ReleasePatchCmd represents the release start command
 var ReleasePatchCmd = &cobra.Command{
 	Use:   "patch",
-	Short: "Release a patch",
-	Long:  `Release a new version and bump only patch version`,
+	Short: "Do a patch release",
+	Long:  `Do a new relese only bumping the patch semver part`,
 	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 		log.SetFlags(0)

@@ -45,6 +45,7 @@ func main() {
 
 	cmd.ReleaseCmd.AddCommand(cmd.ReleaseStartCmd)
 	cmd.ReleaseCmd.AddCommand(cmd.ReleaseFinishCmd)
+	cmd.ReleaseCmd.AddCommand(cmd.ReleasePatchCmd)
 	cmd.RootCmd.AddCommand(cmd.ReleaseCmd)
 
 	cmd.RootCmd.AddCommand(cmd.VersionCmd)
